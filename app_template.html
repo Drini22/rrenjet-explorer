@@ -204,6 +204,24 @@ table.samples .hapdot { display:inline-block; width:9px; height:9px; border-radi
 
 footer.src { color:var(--muted); font-size:13px; margin-top:8px; }
 footer.src a { color:var(--accent); text-decoration:none; border-bottom:1px solid currentColor; }
+/* stacked layout: story flows under the map, no inner scroll */
+@media (max-width:1020px){ .mig-story { max-height:none; overflow-y:visible; } }
+
+/* ---------- phone ---------- */
+@media (max-width: 640px) {
+  .wrap { padding:0 14px 56px; }
+  header.hero { padding:26px 0 6px; }
+  .card { padding:16px 14px 18px; }
+  .stat { padding:10px 14px; }
+  .stat .v { font-size:24px; }
+  /* 16px inputs stop iOS Safari from zooming in on focus */
+  .filters input[type=search], .filters select, .match-in input { font-size:16px; }
+  .mig-stops { flex-wrap:wrap; justify-content:flex-start; gap:2px 12px; }
+  .mig-stops button { font-size:10.5px; padding:2px 0; }
+  .crumbs { font-size:12px; }
+  table.samples { font-size:12.5px; }
+  .rrow { grid-template-columns:96px 1fr 44px; gap:8px; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
 button:focus-visible, .rrow:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 </style>
@@ -1153,6 +1171,10 @@ function renderMig(){
     st.append("circle").attr("cx",p[0]).attr("cy",p[1]).attr("r",2.6).attr("fill",col).attr("stroke",css("--page")).attr("stroke-width",1);
     st.append("text").attr("class","arrow-label").attr("x",p[0]+11).attr("y",p[1]+4).text(m.label[lang]||m.label.sq);
   }
+
+  /* on narrow screens the map overflows its container — start scrolled to the Balkans */
+  const sc = document.getElementById("migmap").parentElement;
+  if (sc.scrollWidth > sc.clientWidth) sc.scrollLeft = sc.scrollWidth*0.54 - sc.clientWidth/2;
 
   /* ---- story panel ---- */
   const chipHtml = c => {
