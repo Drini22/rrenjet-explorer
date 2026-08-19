@@ -1,0 +1,1310 @@
+<title>Rrënjët Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --page:#f7f6f2; --surface:#fcfcfb; --panel:#f1f0ea;
+  --ink:#161511; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --border:rgba(22,21,17,.10);
+  --accent:#a3242a; --accent-ink:#ffffff; --accent-soft:rgba(163,36,42,.09);
+  --map-land:#edece5; --map-line:#d4d3ca;
+  --mig-zone:rgba(120,110,85,.12); --mig-state:rgba(70,90,120,.11);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948; --sO:#77756e;
+  --shadow:0 1px 2px rgba(22,21,17,.05), 0 4px 16px rgba(22,21,17,.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --panel:#232321;
+    --ink:#f2f1ec; --ink2:#c3c2b7; --muted:#8f8d85;
+    --grid:#2c2c2a; --border:rgba(255,255,255,.10);
+    --accent:#e0565a; --accent-ink:#160707; --accent-soft:rgba(224,86,90,.14);
+    --map-land:#222220; --map-line:#343431;
+    --mig-zone:rgba(215,205,175,.09); --mig-state:rgba(130,160,205,.11);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --sO:#8a887f;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --panel:#232321;
+  --ink:#f2f1ec; --ink2:#c3c2b7; --muted:#8f8d85;
+  --grid:#2c2c2a; --border:rgba(255,255,255,.10);
+  --accent:#e0565a; --accent-ink:#160707; --accent-soft:rgba(224,86,90,.14);
+  --map-land:#222220; --map-line:#343431;
+  --mig-zone:rgba(215,205,175,.09); --mig-state:rgba(130,160,205,.11);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --sO:#8a887f;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; background:var(--page); color:var(--ink);
+  font-family:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:1240px; margin:0 auto; padding:0 24px 80px; }
+
+/* ---------- header ---------- */
+header.hero { padding:44px 0 8px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+.hero .eyebrow { font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+.hero h1 { font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:clamp(34px, 5vw, 52px); line-height:1.04; margin:0 0 10px; text-wrap:balance; }
+.hero .sub { color:var(--ink2); max-width:58ch; margin:0; }
+.hero .sub a { color:var(--accent); text-decoration:none; border-bottom:1px solid currentColor; }
+.lang-toggle { display:flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; background:var(--surface); flex:none; }
+.lang-toggle button { border:0; background:transparent; color:var(--ink2); font:inherit; font-weight:600; font-size:13px; padding:7px 16px; cursor:pointer; }
+.lang-toggle button.on { background:var(--accent); color:var(--accent-ink); }
+
+/* ---------- stats ---------- */
+.stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:12px; margin:28px 0 18px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 18px; box-shadow:var(--shadow); }
+.stat .v { font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:30px; line-height:1.1; }
+.stat .v small { font-size:15px; color:var(--muted); font-family:"Instrument Sans", system-ui, sans-serif; font-weight:500; }
+.stat .k { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:3px; }
+
+/* ---------- filter bar ---------- */
+.filters { position:sticky; top:0; z-index:30; background:var(--page); padding:10px 0 12px; border-bottom:1px solid var(--grid); margin-bottom:26px; }
+.filters .row1 { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.filters input[type=search] { flex:1 1 220px; min-width:180px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--ink); font:inherit; padding:8px 12px; }
+.filters input[type=search]:focus, .filters select:focus { outline:2px solid var(--accent); outline-offset:1px; }
+.filters select { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--ink); font:inherit; padding:8px 10px; max-width:200px; }
+.chip { border:1px solid var(--border); background:var(--surface); color:var(--ink2); border-radius:999px; font:inherit; font-size:13px; font-weight:500; padding:6px 13px; cursor:pointer; }
+.chip:hover { border-color:var(--muted); }
+.chip.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+.chip .n { opacity:.65; font-size:12px; margin-left:4px; font-variant-numeric:tabular-nums; }
+.active-chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.active-chips:empty { display:none; }
+.fchip { display:inline-flex; align-items:center; gap:7px; background:var(--accent-soft); color:var(--accent); border:1px solid transparent; border-radius:999px; font-size:13px; font-weight:600; padding:5px 12px; cursor:pointer; }
+.fchip .x { font-weight:700; }
+.clear-btn { border:0; background:transparent; color:var(--muted); font:inherit; font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; }
+
+/* ---------- cards ---------- */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:stretch; }
+@media (max-width: 1020px) { .grid2 { grid-template-columns:1fr; } }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); padding:20px 22px 22px; margin-bottom:20px; min-width:0; }
+.card h2 { font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:21px; margin:0 0 2px; }
+.card .desc { color:var(--muted); font-size:13.5px; margin:0 0 14px; }
+.scroll-x { overflow-x:auto; }
+
+/* ---------- sunburst ---------- */
+.crumbs { display:flex; align-items:center; flex-wrap:wrap; gap:4px; min-height:30px; margin-bottom:6px; font-size:13px; font-weight:600; }
+.crumbs button { border:0; background:var(--panel); color:var(--ink2); font:inherit; font-size:13px; font-weight:600; border-radius:6px; padding:3px 9px; cursor:pointer; }
+.crumbs button:hover { color:var(--ink); }
+.crumbs .sep { color:var(--muted); }
+.crumbs .here { background:var(--accent); color:var(--accent-ink); border-radius:6px; padding:3px 9px; }
+#sunburst { display:block; width:100%; height:auto; }
+#sunburst path.arc { cursor:pointer; }
+#sunburst text { pointer-events:none; }
+.fis-panel { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:12px; }
+.fis-panel:empty { display:none; }
+.fis-panel .fp-label { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-right:4px; }
+.fp-chip { border:1px solid var(--border); background:var(--panel); color:var(--ink2); border-radius:999px; font:inherit; font-size:12.5px; font-weight:500; padding:3px 11px; cursor:pointer; }
+.fp-chip:hover { border-color:var(--muted); }
+.fp-chip.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+.fp-chip .n { opacity:.65; font-size:11.5px; margin-left:3px; font-variant-numeric:tabular-nums; }
+.fp-more { color:var(--muted); font-size:12px; }
+.legend { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:14px; }
+.lg { display:inline-flex; align-items:center; gap:7px; border:0; background:transparent; color:var(--ink2); font:inherit; font-size:13px; font-weight:500; cursor:pointer; padding:2px 4px; border-radius:6px; }
+.lg:hover { background:var(--panel); }
+.lg .sw { width:11px; height:11px; border-radius:3px; flex:none; }
+.lg .n { color:var(--muted); font-variant-numeric:tabular-nums; }
+.lg.dim { opacity:.4; }
+
+/* ---------- map ---------- */
+#map { display:block; width:100%; height:auto; }
+#map .qgroup { cursor:pointer; }
+#map .country-label { fill:var(--muted); font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; pointer-events:none; }
+
+/* ---------- chronology ---------- */
+#chrono { display:block; width:100%; height:auto; min-width:760px; }
+#chrono .crow { cursor:pointer; }
+#chrono .crow text.cname { font-size:12px; font-weight:600; fill:var(--ink2); }
+#chrono .crow.sel text.cname { fill:var(--accent); }
+#chrono .crow.dim { opacity:.35; }
+#chrono .era-label { fill:var(--muted); font-size:9.5px; font-weight:600; letter-spacing:.1em; }
+#chrono .yr-label { fill:var(--muted); font-size:9.5px; }
+#chrono .cpill { font-size:11.5px; fill:var(--ink2); font-variant-numeric:tabular-nums; }
+
+/* ---------- migration map ---------- */
+.mig-slider { margin:4px 0 16px; }
+.mig-slider input[type=range] { width:100%; accent-color:var(--accent); cursor:pointer; }
+.mig-stops { display:flex; justify-content:space-between; margin-top:2px; }
+.mig-stops button { border:0; background:transparent; color:var(--muted); font:inherit; font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; padding:2px 2px; border-radius:4px; }
+.mig-stops button.on { color:var(--accent); }
+.mig-grid { display:grid; grid-template-columns:1.55fr 1fr; gap:18px; align-items:start; }
+@media (max-width:1020px){ .mig-grid { grid-template-columns:1fr; } }
+#migmap { display:block; width:100%; height:auto; min-width:520px; background:var(--page); border-radius:10px; }
+#migmap .land { fill:var(--map-land); stroke:var(--map-line); stroke-width:.7; }
+#migmap .zone-cult { fill:var(--mig-zone); stroke:var(--muted); stroke-width:1; stroke-dasharray:5 4; opacity:.9; }
+#migmap .zone-state { fill:var(--mig-state); stroke:var(--ink2); stroke-width:1.2; opacity:.85; }
+#migmap .zone-focus { fill:var(--accent-soft); stroke:var(--accent); stroke-width:1.4; }
+#migmap .zone-label { fill:var(--ink2); font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; paint-order:stroke; stroke:var(--page); stroke-width:3; }
+#migmap .arrow-label { font-size:11px; font-weight:600; fill:var(--ink); paint-order:stroke; stroke:var(--page); stroke-width:3.5; }
+.mig-story { background:var(--panel); border-radius:10px; padding:16px 18px; max-height:560px; overflow-y:auto; }
+.mig-story h3 { font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:19px; margin:0; }
+.mig-story .yrs { color:var(--accent); font-size:12.5px; font-weight:600; letter-spacing:.06em; margin:2px 0 10px; }
+.mig-story .summ { color:var(--ink2); font-size:13.5px; margin:0 0 14px; }
+.mig-story .mstory { margin-bottom:13px; }
+.mig-story .mstory p { margin:5px 0 0; font-size:13px; color:var(--ink2); line-height:1.5; }
+.mig-chip { display:inline-flex; align-items:center; gap:7px; border:1px solid var(--border); background:var(--surface); color:var(--ink); border-radius:999px; font:inherit; font-size:12.5px; font-weight:600; padding:3px 11px; cursor:pointer; }
+.mig-chip .sw { width:10px; height:10px; border-radius:3px; flex:none; }
+.mig-chip.on { border-color:var(--accent); color:var(--accent); }
+.mig-chip.neutral { cursor:default; }
+.mig-arrived { border-top:1px solid var(--grid); margin-top:12px; padding-top:11px; display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+.mig-arrived .lbl { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-right:3px; width:100%; }
+.mig-arrived .mig-chip { font-size:11.5px; padding:2px 9px; font-weight:500; }
+
+/* ---------- region bars ---------- */
+.rbars { display:flex; flex-direction:column; gap:7px; }
+.rrow { display:grid; grid-template-columns:170px 1fr 58px; gap:12px; align-items:center; cursor:pointer; border-radius:6px; padding:2px 4px; }
+.rrow:hover { background:var(--panel); }
+.rrow.sel { background:var(--accent-soft); }
+.rrow .rname { font-size:13.5px; font-weight:500; color:var(--ink2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:right; }
+.rrow.sel .rname { color:var(--accent); font-weight:600; }
+.rrow .rbar { display:flex; gap:2px; height:20px; border-radius:4px; overflow:hidden; }
+.rrow .seg { height:100%; min-width:1px; }
+.rrow .rn { font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+@media (max-width:640px){ .rrow{ grid-template-columns:110px 1fr 48px; } }
+
+/* ---------- match tool ---------- */
+.match-in { display:flex; gap:10px; flex-wrap:wrap; }
+.match-in input { flex:1 1 300px; background:var(--page); border:1px solid var(--border); border-radius:8px; color:var(--ink); font:inherit; padding:9px 13px; font-variant-numeric:tabular-nums; }
+.match-in input:focus { outline:2px solid var(--accent); outline-offset:1px; }
+.match-in button { border:0; background:var(--accent); color:var(--accent-ink); font:inherit; font-weight:600; border-radius:8px; padding:9px 20px; cursor:pointer; }
+.match-out { margin-top:16px; }
+.match-out .none { color:var(--muted); }
+.snp { display:inline-block; background:var(--panel); border-radius:5px; padding:1px 7px; font-size:12.5px; font-weight:500; color:var(--ink2); font-variant-numeric:tabular-nums; }
+.snp.hit { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+
+/* ---------- table ---------- */
+table.samples { width:100%; border-collapse:collapse; font-size:13.5px; }
+table.samples th { text-align:left; font-size:11.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--grid); padding:8px 10px; white-space:nowrap; }
+table.samples td { border-bottom:1px solid var(--grid); padding:7px 10px; vertical-align:top; }
+table.samples tr:hover td { background:var(--panel); }
+table.samples .dimc { color:var(--muted); }
+table.samples .chaincell { font-variant-numeric:tabular-nums; color:var(--ink2); }
+table.samples .chaincell b { color:var(--ink); font-weight:600; }
+table.samples .hapdot { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:7px; }
+.pager { display:flex; align-items:center; gap:14px; margin-top:14px; }
+.pager button { border:1px solid var(--border); background:var(--surface); color:var(--ink2); font:inherit; font-weight:600; font-size:13px; border-radius:7px; padding:5px 14px; cursor:pointer; }
+.pager button:disabled { opacity:.35; cursor:default; }
+.pager .pinfo { font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+
+/* ---------- tooltip ---------- */
+#tip { position:fixed; z-index:99; pointer-events:none; background:var(--surface); color:var(--ink); border:1px solid var(--border); border-radius:9px; box-shadow:var(--shadow); padding:9px 12px; font-size:13px; max-width:290px; opacity:0; transition:opacity .1s; }
+#tip .t { font-weight:600; margin-bottom:2px; }
+#tip .s { color:var(--ink2); }
+#tip .rowline { display:flex; align-items:center; gap:7px; margin-top:3px; }
+#tip .rowline .sw { width:9px; height:9px; border-radius:3px; flex:none; }
+#tip .rowline .n { margin-left:auto; font-variant-numeric:tabular-nums; color:var(--ink2); padding-left:14px; }
+
+footer.src { color:var(--muted); font-size:13px; margin-top:8px; }
+footer.src a { color:var(--accent); text-decoration:none; border-bottom:1px solid currentColor; }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+button:focus-visible, .rrow:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow" data-i="eyebrow"></div>
+      <h1>Rrënjët Explorer</h1>
+      <p class="sub" data-i="subtitle-html"></p>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="lang-sq">Shqip</button><button id="lang-en">English</button>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filters">
+    <div class="row1">
+      <input type="search" id="q" />
+      <span id="country-chips" style="display:flex;gap:8px;flex-wrap:wrap;"></span>
+      <select id="fis-sel"></select>
+      <button class="clear-btn" id="clear-btn" data-i="clear"></button>
+    </div>
+    <div class="active-chips" id="active-chips"></div>
+  </div>
+
+  <div class="grid2">
+    <section class="card">
+      <h2 data-i="tree-title"></h2>
+      <p class="desc" data-i="tree-desc"></p>
+      <div class="crumbs" id="crumbs"></div>
+      <svg id="sunburst" viewBox="0 0 640 560" role="img"></svg>
+      <div class="fis-panel" id="fis-panel"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i="map-title"></h2>
+      <p class="desc" data-i="map-desc"></p>
+      <svg id="map" viewBox="0 0 640 640" role="img"></svg>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2 data-i="chrono-title"></h2>
+    <p class="desc" data-i="chrono-desc"></p>
+    <div class="scroll-x"><svg id="chrono" role="img"></svg></div>
+    <p class="desc" style="margin-top:10px" data-i="chrono-note"></p>
+  </section>
+
+  <section class="card">
+    <h2 data-i="mig-title"></h2>
+    <p class="desc" data-i="mig-desc"></p>
+    <div class="mig-slider">
+      <input type="range" id="mig-range" min="0" max="8" step="1" value="0" aria-label="Era">
+      <div class="mig-stops" id="mig-stops"></div>
+    </div>
+    <div class="mig-grid">
+      <div class="scroll-x"><svg id="migmap" viewBox="0 0 720 560" role="img"></svg></div>
+      <div class="mig-story" id="mig-story"></div>
+    </div>
+    <p class="desc" style="margin-top:10px" data-i="mig-note"></p>
+  </section>
+
+  <section class="card">
+    <h2 data-i="regions-title"></h2>
+    <p class="desc" data-i="regions-desc"></p>
+    <div class="rbars" id="rbars"></div>
+  </section>
+
+  <section class="card">
+    <h2 data-i="match-title"></h2>
+    <p class="desc" data-i="match-desc"></p>
+    <div class="match-in">
+      <input id="match-q" spellcheck="false" />
+      <button id="match-btn" data-i="match-btn"></button>
+    </div>
+    <div class="match-out" id="match-out"></div>
+  </section>
+
+  <section class="card">
+    <h2 data-i="table-title"></h2>
+    <p class="desc" id="table-count"></p>
+    <div class="scroll-x">
+      <table class="samples">
+        <thead><tr>
+          <th data-i="th-hap"></th><th data-i="th-surname"></th><th data-i="th-fis"></th>
+          <th data-i="th-rreth"></th><th data-i="th-qark"></th><th data-i="th-country"></th><th data-i="th-chain"></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="pg-prev">←</button>
+      <span class="pinfo" id="pg-info"></span>
+      <button id="pg-next">→</button>
+    </div>
+  </section>
+
+  <footer class="src" data-i="footer-html"></footer>
+</div>
+<div id="tip"></div>
+
+<script>
+/*__D3__*/
+</script>
+<script>
+window.__DATA__ = /*__DATA__*/;
+window.__GEO__ = /*__GEO__*/;
+window.__EUROPE__ = /*__EUROPE__*/;
+</script>
+<script>
+(function(){
+"use strict";
+
+/* ============ i18n ============ */
+const I18N = {
+  sq: {
+    eyebrow: "Projekti Shqiptar i ADN-së · Y-kromozomi",
+    "subtitle-html": 'Atlas ndërveprues i {N} mostrave Y-ADN nga trojet shqiptare, sipas të dhënave publike të <a href="https://rrenjet.com" target="_blank" rel="noopener">rrenjet.com</a>. Kliko pemën, hartën ose rajonet për të filtruar.',
+    clear: "Pastro filtrat",
+    "search-ph": "Kërko mbiemër, fis, rreth ose SNP…",
+    "fis-all": "Të gjitha fiset",
+    "tree-title": "Pema e prejardhjes",
+    "tree-desc": "Çdo hark është një degë SNP; madhësia = numri i mostrave. Kliko për t'u thelluar, kliko qendrën për t'u kthyer. Kalo miun mbi një hark për të parë fiset e asaj dege.",
+    "fis-in-branch": "Fiset në këtë degë",
+    "map-title": "Shpërndarja gjeografike",
+    "map-desc": "Rrathët tregojnë përbërjen e haplogrupeve për qark; madhësia = numri i mostrave. Kliko një rreth për të filtruar.",
+    "mig-title": "Harta e migrimeve",
+    "mig-desc": "Rrëshqit vitet për të parë kush lëvizte, nga erdhi dhe si dukej harta politike e epokës. Kliko një kladë në tregim për të filtruar mostrat e saj.",
+    "mig-note": "Shigjetat janë skematike (2–3 për kladë) dhe kufijtë historikë shumë të thjeshtuar. Vijë e ndërprerë = rrymë e vogël ose e pasigurt. Bazuar në ADN-në e lashtë, TMRCA-të e publikuara dhe artikujt e rrenjet.com — interpretim, jo fakt i prerë.",
+    "mig-arrived": "Tashmë në Ballkan",
+    "chrono-title": "Kronologjia e ardhjeve",
+    "chrono-desc": "Kur mbërritën në Ballkan paraardhësit e bartësve të sotëm të çdo klade. Kliko një rresht për të filtruar mostrat e saj.",
+    "chrono-note": "Shiriti = dritarja e përafërt e ardhjes · vija e hollë = prania deri sot · ✳ = zgjerim demografik i mëvonshëm. Sipas larmisë brenda kladës, ADN-së së lashtë dhe artikujve të rrenjet.com — interpretim, jo fakt i prerë.",
+    "chrono-arrival": "Ardhja",
+    "chrono-expansion": "zgjerim",
+    "chrono-earlier": "ose më herët",
+    "regions-title": "Përbërja sipas rajoneve",
+    "regions-desc": "Pjesa e çdo haplogrupi kryesor për qark, renditur sipas numrit të mostrave.",
+    "match-title": "Krahaso rezultatin tënd",
+    "match-desc": "Shkruaj SNP-në tënde terminale (p.sh. BY5617) ose zinxhirin e plotë (E-V13>Z16663>…) për të gjetur mostrat me markera të përbashkët.",
+    "match-btn": "Krahaso",
+    "match-ph": "p.sh. E-V13>Z5018>Z16659 ose BY5617",
+    "match-none": "Asnjë mostër me këta markera. Provo një SNP më lart në zinxhir.",
+    "match-shared": "markera të përbashkët",
+    "table-title": "Të gjitha mostrat",
+    "th-hap": "Haplogrupi", "th-surname": "Mbiemri", "th-fis": "Fisi", "th-rreth": "Rrethi",
+    "th-qark": "Qarku", "th-country": "Shteti", "th-chain": "Zinxhiri Y-ADN",
+    "st-samples": "Mostra", "st-haps": "Haplogrupe", "st-snps": "SNP terminale", "st-regions": "Qarqe e rajone", "st-fise": "Fise",
+    "of": "nga", "page": "Faqja", "samples-shown": "mostra",
+    "other": "Të tjera", "other-regions": "Rajone të tjera",
+    "footer-html": 'Burimi i të dhënave: <a href="https://rrenjet.com" target="_blank" rel="noopener">rrenjet.com — Projekti Shqiptar i ADN-së</a>, databaza kombëtare (kopje e 19 gusht 2026, {N} mostra). Ky vegël është vetëm për eksplorim; të gjitha meritat për mbledhjen e të dhënave u takojnë autorëve të projektit.',
+    "crumb-root": "Të gjitha",
+    "unknown": "—",
+  },
+  en: {
+    eyebrow: "The Albanian DNA Project · Y-chromosome",
+    "subtitle-html": 'An interactive atlas of {N} Y-DNA samples from Albanian-inhabited lands, based on the public data of <a href="https://rrenjet.com" target="_blank" rel="noopener">rrenjet.com</a>. Click the tree, the map or the regions to filter.',
+    clear: "Clear filters",
+    "search-ph": "Search surname, clan, district or SNP…",
+    "fis-all": "All clans",
+    "tree-title": "Lineage tree",
+    "tree-desc": "Each arc is an SNP branch; size = number of samples. Click to drill in, click the center to go back up. Hover an arc to see the clans of that branch.",
+    "fis-in-branch": "Clans in this branch",
+    "map-title": "Geographic distribution",
+    "map-desc": "Circles show the haplogroup make-up of each county; size = sample count. Click a circle to filter.",
+    "mig-title": "Migration map",
+    "mig-desc": "Slide through the years to see who was moving, where they came from, and what the era's political map looked like. Click a clade in the story to filter to its samples.",
+    "mig-note": "Arrows are schematic (2–3 per clade) and historical borders heavily simplified. Dashed = small or uncertain stream. Based on ancient DNA, published TMRCAs and rrenjet.com's articles — an interpretation, not settled fact.",
+    "mig-arrived": "Already in the Balkans",
+    "chrono-title": "Arrival chronology",
+    "chrono-desc": "When the ancestors of today's carriers of each clade arrived in the Balkans. Click a row to filter to its samples.",
+    "chrono-note": "Bar = approximate arrival window · thin line = presence to today · ✳ = later demographic expansion. Based on within-clade diversity, ancient DNA and rrenjet.com's articles — an interpretation, not settled fact.",
+    "chrono-arrival": "Arrival",
+    "chrono-expansion": "expansion",
+    "chrono-earlier": "or earlier",
+    "regions-title": "Composition by region",
+    "regions-desc": "Share of each major haplogroup per county, ordered by sample count.",
+    "match-title": "Compare your result",
+    "match-desc": "Enter your terminal SNP (e.g. BY5617) or your full chain (E-V13>Z16663>…) to find samples sharing markers with you.",
+    "match-btn": "Compare",
+    "match-ph": "e.g. E-V13>Z5018>Z16659 or BY5617",
+    "match-none": "No samples share these markers. Try an SNP higher up the chain.",
+    "match-shared": "shared markers",
+    "table-title": "All samples",
+    "th-hap": "Haplogroup", "th-surname": "Surname", "th-fis": "Clan", "th-rreth": "District",
+    "th-qark": "County", "th-country": "Country", "th-chain": "Y-DNA chain",
+    "st-samples": "Samples", "st-haps": "Haplogroups", "st-snps": "Terminal SNPs", "st-regions": "Counties & regions", "st-fise": "Clans",
+    "of": "of", "page": "Page", "samples-shown": "samples",
+    "other": "Other", "other-regions": "Other regions",
+    "footer-html": 'Data source: <a href="https://rrenjet.com" target="_blank" rel="noopener">rrenjet.com — The Albanian DNA Project</a>, national database (snapshot of 19 August 2026, {N} samples). This tool is for exploration only; all credit for the data collection belongs to the project\'s authors.',
+    "crumb-root": "All",
+    "unknown": "—",
+  }
+};
+let lang = "sq";
+try { lang = localStorage.getItem("rrenjet-lang") || "sq"; } catch(e){}
+const saveLang = v => { try { localStorage.setItem("rrenjet-lang", v); } catch(e){} };
+const L = k => (I18N[lang][k] !== undefined ? I18N[lang][k] : k);
+
+/* ============ data ============ */
+const RAW = window.__DATA__.samples;
+const GEO = window.__GEO__;
+const samples = RAW.map((r, i) => ({
+  id: i, surname: r[0], fis: r[1], rreth: r[2], qark: r[3], country: r[4],
+  chain: r[5], top: r[5][0], terminal: r[5][r[5].length - 1],
+}));
+const N = samples.length;
+
+const TOP8 = ["E-V13","R1b-M269","J2b-L283","I2a-L460","R1a-M417","J2a-M410","I1-M253","J1-M267"];
+const OTHER = "__other__";
+const SLOT = {}; TOP8.forEach((h,i)=>SLOT[h]="--s"+(i+1));
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const hapVar = h => SLOT[h] || "--sO";
+const hapColor = h => css(hapVar(h));
+const hapKey = s => SLOT[s.top] ? s.top : OTHER;
+const hapLabel = k => k === OTHER ? L("other") : k;
+const HAPS = TOP8.concat([OTHER]);
+
+/* qark -> [lon, lat] (approximate centroids, hand-placed) */
+const QARK_LL = {
+  "Shkodër":[19.55,42.15],"Kukës":[20.35,42.05],"Lezhë":[19.72,41.82],"Dibër":[20.35,41.63],
+  "Durrës":[19.50,41.42],"Tiranë":[19.86,41.28],"Elbasan":[20.20,41.03],"Fier":[19.60,40.68],
+  "Berat":[19.98,40.66],"Korçë":[20.72,40.62],"Gjirokastër":[20.22,40.05],"Vlorë":[19.55,40.32],
+  "Prishtinë":[21.14,42.63],"Prizren":[20.75,42.20],"Pejë":[20.32,42.68],"Gjakovë":[20.45,42.36],
+  "Mitrovicë":[20.85,42.92],"Gjilan":[21.50,42.44],"Ferizaj":[21.13,42.35],
+  "Pollog":[20.95,41.95],"Shkup":[21.45,42.02],"Rajoni jugp.":[20.85,41.42],
+  "Pellagoni":[21.30,41.05],"Rajoni verilindor":[21.95,42.15],
+  "Tuz":[19.35,42.42],"Ulqin":[19.22,41.95],"Plavë":[19.92,42.62],"Guci":[19.85,42.55],
+  "Tivar":[19.12,42.08],"Rozhajë":[20.15,42.85],"Podgoricë":[19.20,42.47],
+  "Bjelo Polje":[19.72,43.05],"Danilovgrad":[19.08,42.58],
+  "Çamëri":[20.25,39.55],"Kostur":[21.27,40.52],"Thesproti":[20.40,39.42],
+  "Preshevë":[21.62,42.31],"Medvegjë":[21.58,42.83],"Bujanovc":[21.75,42.47],
+};
+const COUNTRIES = ["Shqipëri","Kosovë","Maqedoni","Mal i Zi","Greqi","Serbi"];
+
+/* ============ state ============ */
+const state = { lineage: [], qark: null, country: null, fis: null, q: "" };
+
+function matchesGeo(s){
+  return (!state.country || s.country === state.country) &&
+         (!state.qark || s.qark === state.qark);
+}
+function matchesFis(s){ return !state.fis || s.fis === state.fis; }
+function matchesQ(s){
+  if (!state.q) return true;
+  const q = state.q.toLowerCase();
+  return s.surname.toLowerCase().includes(q) || s.fis.toLowerCase().includes(q) ||
+         s.rreth.toLowerCase().includes(q) || s.qark.toLowerCase().includes(q) ||
+         s.country.toLowerCase().includes(q) ||
+         s.chain.some(x => x.toLowerCase().includes(q));
+}
+function matchesLineage(s){
+  return state.lineage.every((snp, i) => s.chain[i] === snp);
+}
+/* full filter, and per-view filters that exclude the view's own dimension */
+const filtered      = () => samples.filter(s => matchesLineage(s) && matchesGeo(s) && matchesFis(s) && matchesQ(s));
+const filteredNoLin = () => samples.filter(s => matchesGeo(s) && matchesFis(s) && matchesQ(s));
+const filteredNoQark= () => samples.filter(s => matchesLineage(s) && (!state.country || s.country===state.country) && matchesFis(s) && matchesQ(s));
+
+/* ============ tooltip ============ */
+const tip = document.getElementById("tip");
+function showTip(html, ev){
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - pad;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tip.style.opacity = 0; }
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+/* ============ header / static labels ============ */
+function renderStatic(){
+  document.querySelectorAll("[data-i]").forEach(el => {
+    const k = el.dataset.i;
+    if (k.endsWith("-html")) el.innerHTML = L(k).replace("{N}", N.toLocaleString(lang==="sq"?"sq-AL":"en-GB"));
+    else el.textContent = L(k);
+  });
+  document.getElementById("q").placeholder = L("search-ph");
+  document.getElementById("match-q").placeholder = L("match-ph");
+  document.getElementById("lang-sq").classList.toggle("on", lang==="sq");
+  document.getElementById("lang-en").classList.toggle("on", lang==="en");
+  document.documentElement.lang = lang;
+}
+
+/* ============ stats ============ */
+function renderStats(){
+  const f = filtered();
+  const nf = f.length, terms = new Set(f.map(s=>s.terminal)).size,
+        haps = new Set(f.map(s=>s.top)).size,
+        regs = new Set(f.map(s=>s.qark)).size,
+        fise = new Set(f.filter(s=>s.fis).map(s=>s.fis)).size;
+  const fmt = n => n.toLocaleString(lang==="sq"?"sq-AL":"en-GB");
+  const anyF = nf !== N;
+  document.getElementById("stats").innerHTML = [
+    ["st-samples", anyF ? `${fmt(nf)} <small>/ ${fmt(N)}</small>` : fmt(nf)],
+    ["st-haps", fmt(haps)], ["st-snps", fmt(terms)], ["st-regions", fmt(regs)], ["st-fise", fmt(fise)],
+  ].map(([k,v]) => `<div class="stat"><div class="v">${v}</div><div class="k">${L(k)}</div></div>`).join("");
+}
+
+/* ============ filter bar ============ */
+function renderFilterBar(){
+  const byC = d3.rollup(samples, v=>v.length, s=>s.country);
+  document.getElementById("country-chips").innerHTML = COUNTRIES.map(c =>
+    `<button class="chip ${state.country===c?"on":""}" data-c="${esc(c)}">${esc(c)}<span class="n">${byC.get(c)||0}</span></button>`
+  ).join("");
+  document.querySelectorAll("#country-chips .chip").forEach(b =>
+    b.onclick = () => { state.country = state.country===b.dataset.c ? null : b.dataset.c; if(state.country && state.qark){ const q = samples.find(s=>s.qark===state.qark); if(q && q.country!==state.country) state.qark=null; } update(); });
+
+  const fisSel = document.getElementById("fis-sel");
+  const byF = Array.from(d3.rollup(samples.filter(s=>s.fis), v=>v.length, s=>s.fis)).sort((a,b)=>b[1]-a[1]);
+  fisSel.innerHTML = `<option value="">${L("fis-all")}</option>` +
+    byF.map(([f,n])=>`<option value="${esc(f)}" ${state.fis===f?"selected":""}>${esc(f)} (${n})</option>`).join("");
+  fisSel.onchange = () => { state.fis = fisSel.value || null; update(); };
+
+  /* active chips */
+  const chips = [];
+  if (state.lineage.length) chips.push(["lineage", state.lineage.join(" › ")]);
+  if (state.country) chips.push(["country", state.country]);
+  if (state.qark) chips.push(["qark", state.qark]);
+  if (state.fis) chips.push(["fis", state.fis]);
+  if (state.q) chips.push(["q", "“"+state.q+"”"]);
+  const ac = document.getElementById("active-chips");
+  ac.innerHTML = chips.map(([k,label]) => `<button class="fchip" data-k="${k}">${esc(label)}<span class="x">×</span></button>`).join("");
+  ac.querySelectorAll(".fchip").forEach(b => b.onclick = () => {
+    const k = b.dataset.k;
+    if (k==="lineage") state.lineage = [];
+    else if (k==="q") { state.q=""; document.getElementById("q").value=""; }
+    else state[k] = null;
+    update();
+  });
+}
+
+/* ============ lineage tree (sunburst) ============ */
+function buildTree(data){
+  const root = { name:"root", children:new Map(), end:0, fis:{} };
+  for (const s of data){
+    let node = root;
+    for (const snp of s.chain){
+      if (!node.children.has(snp)) node.children.set(snp, { name:snp, children:new Map(), end:0, fis:{} });
+      node = node.children.get(snp);
+      if (s.fis) node.fis[s.fis] = (node.fis[s.fis]||0) + 1;
+    }
+    node.end++;
+  }
+  return root;
+}
+const toObj = n => ({ name:n.name, end:n.end, fis:n.fis, children:Array.from(n.children.values()).map(toObj) });
+
+/* Fis written on the arc ONLY where the fis↔branch link is documented on rrenjet.com
+   (fis articles, lineage articles, or keymaster forum posts) AND the branch is
+   dominated by that fis in the database. Curated 2026-08-19. */
+const FIS_NODES = {
+  "Z38299":"Krasniqe",      /* J2b — article j-ph1751z38299 */
+  "Y229591":"Nikaj",        /* J2b — article gashi-i-gurit-nikaj-krasniqe */
+  "Y252971":"Gash",         /* J2b — forum #3847: "trungu gjenetik i gashit të vjetër" */
+  "FT134628":"Kastrat",     /* J2b — article j-ph1751z38299 */
+  "Y21878":"Hot",           /* J2b — article fisi-hot */
+  "Y23094":"Shkrel",        /* J2b — article fisi-shkrel */
+  "Y257550":"Çidhën",       /* J2b — article j-y82533 */
+  "FGC33625":"Berishë",     /* E-V13 — rezultatet 2021 + article berisha */
+  "Z16988":"Kelmend",       /* E-V13 — rezultatet 2021 */
+  "Y282207":"Thaç",         /* E-V13 — article e-ph2180 */
+  "Y230317":"Gash-Bardhë",  /* E-V13 — article e-ph2180 */
+  "Y194482":"Berishë e Kuqe", /* forum #3701 (fiset malësore) */
+  "FT70142":"Sop",          /* article berisha */
+  "BY168279":"Triesh",      /* E-V13 — forum fiset-malesore: Kuçi + Trieshi, TMRCA ~700 vjet */
+  "BY20093":"Kthellë",      /* article selita */
+  "A24000":"Bytyç",         /* R1b — article fisi-bytyc */
+  "FT427692":"Thaç-Zogaj",  /* R1b — forum #3701 */
+  "Y83965":"Shalë",         /* R1b PF7563 — forum #4031: "shalen në malet e dukagjinit" */
+};
+function fisLine(fisObj){
+  const entries = Object.entries(fisObj||{}).sort((a,b)=>b[1]-a[1]);
+  if (!entries.length) return "";
+  const shown = entries.slice(0,4).map(([f,c])=>`${esc(f)} (${c})`).join(", ");
+  const more = entries.length - 4;
+  return `<div class="s" style="margin-top:3px"><b>${L("th-fis")}:</b> ${shown}${more>0?` +${more}`:""}</div>`;
+}
+
+function renderSunburst(){
+  const data = filteredNoLin();
+  const tree = buildTree(data);
+  /* locate current root along state.lineage */
+  let cur = tree, path = [];
+  for (const snp of state.lineage){
+    const nxt = cur.children.get(snp);
+    if (!nxt) break;
+    cur = nxt; path.push(snp);
+  }
+  state.lineage = path; /* trim if data no longer contains it */
+
+  /* breadcrumbs */
+  const cr = document.getElementById("crumbs");
+  let html = `<button data-d="0">${L("crumb-root")}</button>`;
+  path.forEach((snp,i) => {
+    html += `<span class="sep">›</span>` + (i===path.length-1
+      ? `<span class="here">${esc(snp)}</span>`
+      : `<button data-d="${i+1}">${esc(snp)}</button>`);
+  });
+  cr.innerHTML = html;
+  cr.querySelectorAll("button").forEach(b => b.onclick = () => { state.lineage = path.slice(0, +b.dataset.d); update(); });
+
+  const H = d3.hierarchy(toObj(cur), d=>d.children).sum(d=>d.end).sort((a,b)=>b.value-a.value);
+  const MAXD = 4;
+  const W = 640, HT = 560, R = Math.min(W,HT)/2 - 8, R0 = 62;
+  d3.partition().size([2*Math.PI, MAXD])(H);
+
+  const svg = d3.select("#sunburst");
+  svg.selectAll("*").remove();
+  const g = svg.append("g").attr("transform",`translate(${W/2},${HT/2})`);
+  const rScale = d => R0 + (R-R0) * d/MAXD;
+  const arc = d3.arc()
+    .startAngle(d=>d.x0).endAngle(d=>d.x1)
+    .padAngle(d=>Math.min((d.x1-d.x0)/2, .004)).padRadius(R)
+    .innerRadius(d=>rScale(d.depth-1)).outerRadius(d=>rScale(d.depth)-1.5);
+
+  /* color: hue from top haplogroup of the branch; fade toward surface with depth */
+  const surface = css("--surface");
+  function fillOf(d){
+    let topName;
+    if (path.length) topName = path[0];
+    else { let n = d; while (n.depth > 1) n = n.parent; topName = n.data.name; }
+    const base = hapColor(topName) || css("--sO");   /* hapColor falls back to --sO for non-top8 */
+    const rel = d.depth - 1;                          /* 0 for the first visible ring */
+    return d3.interpolateLab(d3.lab(base), surface)(Math.min(rel * 0.14, 0.55));
+  }
+
+  const nodes = H.descendants().filter(d => d.depth>0 && d.depth<=MAXD && (d.x1-d.x0) > 0.0015);
+  g.selectAll("path.arc").data(nodes).join("path")
+    .attr("class","arc")
+    .attr("d", arc)
+    .attr("fill", fillOf)
+    .on("mousemove", (ev,d) => {
+      const seq = path.concat(d.ancestors().reverse().slice(1).map(n=>n.data.name));
+      showTip(`<div class="t">${esc(seq.join(" › "))}</div><div class="s">${d.value.toLocaleString()} ${L("samples-shown")} · ${(100*d.value/H.value).toFixed(1)}%</div>${fisLine(d.data.fis)}`, ev);
+    })
+    .on("mouseleave", hideTip)
+    .on("click", (ev,d) => {
+      hideTip();
+      state.lineage = path.concat(d.ancestors().reverse().slice(1).map(n=>n.data.name));
+      update();
+    });
+
+  /* radial labels on arcs that have room: SNP code + dominant clan when it fits */
+  g.selectAll("g.arcl").data(nodes.filter(d => (d.x1-d.x0) > 0.055 && (rScale(d.depth)-rScale(d.depth-1)) > 24)).join("g")
+    .attr("class","arcl")
+    .attr("transform", d => {
+      const a = (d.x0+d.x1)/2 * 180/Math.PI - 90, r = (rScale(d.depth-1)+rScale(d.depth))/2;
+      return `rotate(${a}) translate(${r},0) rotate(${a > 90 ? 180 : 0})`;
+    })
+    .each(function(d){
+      const el = d3.select(this);
+      const rmid = (rScale(d.depth-1)+rScale(d.depth))/2;
+      const hpx = (d.x1-d.x0) * rmid;             /* angular room in px at mid radius */
+      const fisLbl = FIS_NODES[d.data.name];
+      const two = hpx > 24 && !!fisLbl;
+      const name = d.data.name.length > 11 ? d.data.name.slice(0,10)+"…" : d.data.name;
+      el.append("text").attr("text-anchor","middle")
+        .attr("dy", two ? "-0.15em" : "0.35em")
+        .attr("fill", css("--ink"))
+        .style("font-size","11px").style("font-weight","600")
+        .text(name);
+      if (two){
+        el.append("text").attr("text-anchor","middle")
+          .attr("dy", "0.95em")
+          .attr("fill", css("--ink")).attr("opacity",.75)
+          .style("font-size","9px").style("font-weight","500")
+          .text(`(${fisLbl})`);
+      }
+    });
+
+  /* center */
+  const ctr = g.append("g").style("cursor", path.length ? "pointer":"default")
+    .on("click", () => { if (path.length){ state.lineage = path.slice(0,-1); update(); } });
+  ctr.append("circle").attr("r", R0-4).attr("fill", path.length ? css("--panel") : "transparent")
+     .attr("stroke", css("--grid"));
+  ctr.append("text").attr("text-anchor","middle").attr("dy","-0.3em")
+     .attr("fill", css("--ink")).style("font-weight","600").style("font-size","13px")
+     .text(path.length ? (path[path.length-1].length>9?path[path.length-1].slice(0,8)+"…":path[path.length-1]) : L("crumb-root"));
+  ctr.append("text").attr("text-anchor","middle").attr("dy","1.05em")
+     .attr("fill", css("--muted")).style("font-size","12px")
+     .text(H.value.toLocaleString());
+  if (path.length) ctr.append("text").attr("text-anchor","middle").attr("dy","2.5em")
+     .attr("fill", css("--muted")).style("font-size","10px").text("↩");
+
+  /* legend (top haplogroups, click = jump) */
+  const counts = d3.rollup(data, v=>v.length, s=>hapKey(s));
+  document.getElementById("legend").innerHTML = HAPS.filter(h=>counts.get(h)).map(h =>
+    `<button class="lg ${path.length && path[0]!==h ? "dim":""}" data-h="${esc(h)}"><span class="sw" style="background:var(${hapVar(h===OTHER?"":h)})"></span>${esc(hapLabel(h))}<span class="n">${counts.get(h)}</span></button>`
+  ).join("");
+  document.querySelectorAll("#legend .lg").forEach(b => b.onclick = () => {
+    const h = b.dataset.h;
+    if (h===OTHER) return;
+    state.lineage = (path.length===1 && path[0]===h) ? [] : [h];
+    update();
+  });
+
+  /* clans present in the current branch (ignores the fis filter itself, so you can switch) */
+  const fisCounts = {};
+  for (const s of samples){
+    if (!s.fis || !matchesGeo(s) || !matchesQ(s)) continue;
+    if (!path.every((snp,i)=>s.chain[i]===snp)) continue;
+    fisCounts[s.fis] = (fisCounts[s.fis]||0) + 1;
+  }
+  const fp = document.getElementById("fis-panel");
+  const fentries = Object.entries(fisCounts).sort((a,b)=>b[1]-a[1]);
+  if (!fentries.length) fp.innerHTML = "";
+  else {
+    const MAXF = 12;
+    fp.innerHTML = `<span class="fp-label">${L("fis-in-branch")}</span>` +
+      fentries.slice(0,MAXF).map(([f,c]) =>
+        `<button class="fp-chip ${state.fis===f?"on":""}" data-f="${esc(f)}">${esc(f)}<span class="n">${c}</span></button>`).join("") +
+      (fentries.length>MAXF ? `<span class="fp-more">+${fentries.length-MAXF}</span>` : "");
+    fp.querySelectorAll(".fp-chip").forEach(b => b.onclick = () => {
+      state.fis = state.fis===b.dataset.f ? null : b.dataset.f;
+      update();
+    });
+  }
+}
+
+/* ============ map ============ */
+let projection = null;
+function renderMapBase(){
+  const svg = d3.select("#map");
+  svg.selectAll("*").remove();
+  const W=640, HT=640;
+  const focus = { type:"FeatureCollection", features: GEO.features.filter(f =>
+    ["Albania","Kosovo","Macedonia","Montenegro"].includes(f.properties.name)) };
+  projection = d3.geoMercator().fitExtent([[24,20],[W-24,HT-60]], focus);
+  const pathGen = d3.geoPath(projection);
+  svg.append("g").selectAll("path").data(GEO.features).join("path")
+    .attr("d", pathGen)
+    .attr("fill", css("--map-land"))
+    .attr("stroke", css("--map-line"))
+    .attr("stroke-width", 1);
+  const labels = [["SHQIPËRIA",20.05,40.9],["KOSOVA",21.0,42.56],["MAQEDONIA",21.6,41.6],["MALI I ZI",19.25,42.85],["GREQIA",21.2,39.85],["SERBIA",21.9,43.1]];
+  svg.append("g").selectAll("text").data(labels).join("text")
+    .attr("class","country-label")
+    .attr("x", d=>projection([d[1],d[2]])[0]).attr("y", d=>projection([d[1],d[2]])[1])
+    .attr("text-anchor","middle")
+    .text(d=>d[0]);
+  svg.append("g").attr("id","map-pies");
+}
+function renderMapPies(){
+  if (!projection) renderMapBase();
+  const data = filteredNoQark();
+  const byQ = d3.group(data, s=>s.qark);
+  const entries = Array.from(byQ, ([q,v])=>({q, n:v.length, v})).filter(e=>QARK_LL[e.q]).sort((a,b)=>b.n-a.n);
+  const rSc = d3.scaleSqrt().domain([1, d3.max(entries,e=>e.n)||1]).range([4.5, 27]);
+  const pie = d3.pie().sort(null);
+  const surface = css("--surface");
+  const g = d3.select("#map-pies");
+  g.selectAll("*").remove();
+  const grp = g.selectAll("g.qgroup").data(entries, e=>e.q).join("g")
+    .attr("class","qgroup")
+    .attr("transform", e => { const p = projection(QARK_LL[e.q]); return `translate(${p[0]},${p[1]})`; })
+    .attr("opacity", e => state.qark && state.qark !== e.q ? 0.3 : 1);
+  grp.each(function(e){
+    const counts = HAPS.map(h => e.v.filter(s=>hapKey(s)===h).length);
+    const r = rSc(e.n);
+    const sel = d3.select(this);
+    if (state.qark === e.q)
+      sel.append("circle").attr("r", r+3.5).attr("fill","none").attr("stroke", css("--accent")).attr("stroke-width",2);
+    sel.selectAll("path").data(pie(counts)).join("path")
+      .attr("d", d3.arc().innerRadius(0).outerRadius(r))
+      .attr("fill", (d,i)=>hapColor(HAPS[i]===OTHER?"":HAPS[i]) || css("--sO"))
+      .attr("stroke", surface).attr("stroke-width", 1.2);
+    sel.on("mousemove", ev => {
+      const rows = HAPS.map((h,i)=>[h,counts[i]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+      showTip(`<div class="t">${esc(e.q)}</div><div class="s">${e.n.toLocaleString()} ${L("samples-shown")}</div>` +
+        rows.map(([h,n])=>`<div class="rowline"><span class="sw" style="background:${hapColor(SLOT[h]?h:"")||css("--sO")}"></span>${esc(hapLabel(h))}<span class="n">${n}</span></div>`).join(""), ev);
+    }).on("mouseleave", hideTip)
+      .on("click", () => { hideTip(); state.qark = state.qark===e.q ? null : e.q; update(); });
+  });
+}
+
+/* ============ chronology ============ */
+const ERAS = [
+  { sq:"Mesoliti", en:"Mesolithic", from:-8000, to:-6500 },
+  { sq:"Neoliti",  en:"Neolithic",  from:-6500, to:-2600 },
+  { sq:"Bronzi",   en:"Bronze Age", from:-2600, to:-1100 },
+  { sq:"Hekuri",   en:"Iron Age",   from:-1100, to:-150 },
+  { sq:"Antika",   en:"Antiquity",  from:-150,  to:500 },
+  { sq:"Mesjeta",  en:"Middle Ages",from:500,   to:1400 },
+  { sq:"Osmane",   en:"Ottoman",    from:1400,  to:1912 },
+];
+const CHRONO = [
+  { top:"I2a-M223", open:true, from:-8000, to:-6200, story:{
+    sq:"Shtresa më e vjetër — gjuetarë-mbledhësit e Europës para bujqësisë. Degë të rralla e të thella (bashkë me I2-L596); disa linja mund të kenë ardhur edhe më vonë nga veriu.",
+    en:"The oldest layer — Europe's pre-farming hunter-gatherers. Rare, deeply divergent twigs (together with I2-L596); some branches may also have arrived later from the north." } },
+  { top:"G2-P15", from:-6600, to:-6000, story:{
+    sq:"Bujqit e parë neolitikë nga Anatolia (~6500 p.e.s.). Sot vetëm relike të shpërndara, por me larmi shumë të lartë — shenjë moshe të madhe.",
+    en:"The first Neolithic farmers from Anatolia (~6500 BC). Today only scattered relics, but extremely diverse — a signature of great age." } },
+  { top:"J2a-M410", from:-6500, to:-1000, wide:true, story:{
+    sq:"Shumë valë të pavarura mesdhetare-anatolike, nga Neoliti deri në Antikitet. 48 degë terminale në vetëm 120 mostra — larmia më e lartë për mostër ndër kladat e mëdha: shumë familje të vjetra, jo një popull i vetëm.",
+    en:"Many independent Mediterranean-Anatolian waves, from the Neolithic through Antiquity. 48 terminal branches in just 120 samples — the highest variety per sample among the big clades: many old families, not one people." } },
+  { top:"T1a-M70", from:-6500, to:-5500, story:{
+    sq:"Shtresë neolitike nga Lindja e Afërt; sot relike të rralla.",
+    en:"A Neolithic Near-Eastern layer; rare relics today." } },
+  { top:"E1b-M123", from:-6000, to:-2500, wide:true, story:{
+    sq:"Shtresë nga Levanti/Anatolia; ardhje nga Neoliti deri në Epokën e Bronzit.",
+    en:"A Levantine/Anatolian layer; arrivals from the Neolithic through the Bronze Age." } },
+  { top:"J1-M267", from:-6000, to:1500, wide:true, story:{
+    sq:"Valë të ndryshme nga Lindja e Afërt — nga bujqit neolitikë deri në periudhën osmane; shumë linja të pavarura, larmi e lartë.",
+    en:"Multiple Near-Eastern waves — from Neolithic farmers to the Ottoman era; many independent lineages, high diversity." } },
+  { top:"E-V13", from:-5400, to:-4400, burst:-1100, story:{
+    sq:"Paraardhësit erdhën me bujqit neolitikë; vetë V13 lindi ~2800 p.e.s. dhe shpërtheu në Bronz–Hekur bashkë me popujt historikë të Ballkanit (ilirët, trakët). Dega e çdo të katërti shqiptar.",
+    en:"Its ancestors came with Neolithic farmers; V13 itself was born ~2800 BC and exploded in the Bronze–Iron Age alongside the historic Balkan peoples (Illyrians, Thracians). The lineage of one in four Albanians." } },
+  { top:"J2b-M205", from:-3000, to:-1500, wide:true, story:{
+    sq:"Degë e rrallë lindore, në Ballkan me gjasë që nga Epoka e Bronzit.",
+    en:"A rare eastern branch, likely in the Balkans since the Bronze Age." } },
+  { top:"R1b-M269", from:-2700, to:-2200, story:{
+    sq:"Barinjtë e stepës euroaziatike: dega Z2103 (302 mostra) mbërriti me dyndjet indo-europiane ~2500 p.e.s.; PF7562 (77) është degë e rrallë ballkanike po e Bronzit; pak L51 perëndimore, ndoshta mesjetare.",
+    en:"Eurasian steppe herders: the Z2103 branch (302 samples) arrived with the Indo-European migrations ~2500 BC; PF7562 (77) is a rare Balkan branch also of the Bronze Age; a little western L51, possibly medieval." } },
+  { top:"J2b-L283", from:-2400, to:-2000, burst:-1500, story:{
+    sq:"Ardhje në Bronzin e hershëm përgjatë Adriatikut; e gjetur në varre të Dalmacisë së Bronzit. Trung i vetëm me degëzim të pasur vendas — kandidati klasik “ilir”.",
+    en:"Arrived in the Early Bronze Age along the Adriatic; found in Bronze-Age Dalmatian burials. A single trunk with rich local branching — the classic “Illyrian” candidate." } },
+  { top:"I1-M253", from:350, to:550, burst:1300, story:{
+    sq:"Prejardhje veriore (gjermanike): linjat ballkanike takohen jo më larg se ~1600 vjet — më gjasë gotët e Antikitetit të vonë. Grupimet: Y60985 në Pukë e Kosovë, Y97339 në Labëri; u shumuan me sistemin e fiseve.",
+    en:"Northern (Germanic) origin: Balkan lineages coalesce within ~1,600 years — most likely Goths of Late Antiquity. Clusters: Y60985 in Pukë & Kosovo, Y97339 in Labëria; multiplied through the fis system." } },
+  { top:"I2a-L460", from:550, to:800, story:{
+    sq:"Dega “dinarike” (PH908): klada I2 është e lashtë europiane, por linjat e sotme u përhapën me dyndjet sllave (~600–800 e.s.) — larmi e ulët, moshë e re lokale.",
+    en:"The “Dinaric” branch (PH908): the I2 clade is ancient European, but today's lineages spread with the Slavic migrations (~600–800 AD) — low diversity, young local age." } },
+  { top:"R1a-M417", from:550, to:850, story:{
+    sq:"Kryesisht degët M458 e Z280, të lidhura me dyndjet sllave të Mesjetës së hershme. Përjashtim: dy linja Z93 — dega e skithëve e sarmatëve — që mund të kenë ardhur nga lindja qysh në epokën romake.",
+    en:"Mostly the M458 and Z280 branches, tied to the early-medieval Slavic migrations. Exception: two Z93 lines — the Scythian/Sarmatian branch — which may have arrived from the east as early as the Roman era." } },
+];
+const fmtYear = y => y < 0 ? `${-y} ${lang==="sq"?"p.e.s.":"BC"}` : `${y} ${lang==="sq"?"e.s.":"AD"}`;
+
+function renderChrono(){
+  const svg = d3.select("#chrono");
+  svg.selectAll("*").remove();
+  const W=1000, rowH=30, topPad=40, nRows=CHRONO.length,
+        plotX0=104, plotX1=926, yBot=topPad+nRows*rowH, H=yBot+30;
+  svg.attr("viewBox",`0 0 ${W} ${H}`);
+  const x = d3.scaleLinear().domain([-8000,-2600,2025])
+              .range([plotX0, plotX0+(plotX1-plotX0)*0.24, plotX1]);
+
+  /* era bands */
+  const eb = svg.append("g");
+  ERAS.forEach((e,i)=>{
+    const x0=x(e.from), x1=x(e.to);
+    if (i%2===0) eb.append("rect").attr("x",x0).attr("y",topPad).attr("width",x1-x0)
+      .attr("height",nRows*rowH).attr("fill",css("--panel")).attr("opacity",.55);
+    eb.append("line").attr("x1",x0).attr("x2",x0).attr("y1",topPad).attr("y2",yBot)
+      .attr("stroke",css("--grid"));
+    eb.append("text").attr("class","era-label").attr("x",(x0+x1)/2).attr("y",topPad-22)
+      .attr("text-anchor","middle").text((e[lang]||e.sq).toUpperCase());
+    if (i>0) eb.append("text").attr("class","yr-label").attr("x",x0).attr("y",yBot+16)
+      .attr("text-anchor","middle").text(fmtYear(e.from));
+  });
+  eb.append("line").attr("x1",x(1912)).attr("x2",x(1912)).attr("y1",topPad).attr("y2",yBot).attr("stroke",css("--grid"));
+
+  const counts = d3.rollup(samples, v=>v.length, s=>s.top);
+  const selTop = state.lineage.length ? state.lineage[0] : null;
+
+  CHRONO.forEach((c,i)=>{
+    const n = counts.get(c.top)||0;
+    const pctN = 100*n/N, pct = pctN < 1 ? pctN.toFixed(1) : Math.round(pctN);
+    const cy = topPad + i*rowH + rowH/2;
+    const col = hapColor(c.top) || css("--sO");
+    const sel = selTop === c.top;
+    const g = svg.append("g")
+      .attr("class","crow" + (sel?" sel":"") + (selTop && !sel ? " dim":""))
+      .attr("tabindex",0).attr("role","button");
+    /* label */
+    g.append("text").attr("class","cname").attr("x",96).attr("y",cy+4).attr("text-anchor","end").text(c.top);
+    /* presence line to today */
+    g.append("line").attr("x1",x(c.to)).attr("x2",x(2025)).attr("y1",cy).attr("y2",cy)
+      .attr("stroke",col).attr("stroke-width",2.5).attr("opacity",.4);
+    /* arrival window bar */
+    if (c.open){
+      const gid = "fade"+i;
+      const gr = svg.append("defs").append("linearGradient").attr("id",gid);
+      gr.append("stop").attr("offset","0%").attr("stop-color",col).attr("stop-opacity",0);
+      gr.append("stop").attr("offset","100%").attr("stop-color",col).attr("stop-opacity",1);
+      g.append("rect").attr("x",x(c.from)).attr("y",cy-6).attr("width",x(c.to)-x(c.from)).attr("height",12)
+        .attr("rx",4).attr("fill",`url(#${gid})`);
+    } else {
+      g.append("rect").attr("x",x(c.from)).attr("y",cy-6).attr("width",Math.max(x(c.to)-x(c.from),8)).attr("height",12)
+        .attr("rx",4).attr("fill",col).attr("opacity", c.wide ? .5 : 1);
+    }
+    if (sel) g.append("rect").attr("x",x(c.from)-3).attr("y",cy-9).attr("width",Math.max(x(c.to)-x(c.from),8)+6).attr("height",18)
+      .attr("rx",7).attr("fill","none").attr("stroke",css("--accent")).attr("stroke-width",1.6);
+    /* expansion burst ✳ */
+    if (c.burst){
+      const bx = x(c.burst), r = 6;
+      const star = g.append("g");
+      for (let a=0; a<180; a+=45)
+        star.append("line")
+          .attr("x1",bx-r*Math.cos(a*Math.PI/180)).attr("y1",cy-r*Math.sin(a*Math.PI/180))
+          .attr("x2",bx+r*Math.cos(a*Math.PI/180)).attr("y2",cy+r*Math.sin(a*Math.PI/180))
+          .attr("stroke",col).attr("stroke-width",1.8);
+      star.append("circle").attr("cx",bx).attr("cy",cy).attr("r",2.4).attr("fill",col)
+        .attr("stroke",css("--surface")).attr("stroke-width",1);
+    }
+    /* count pill */
+    g.append("text").attr("class","cpill").attr("x",934).attr("y",cy+4).text(`${n} · ${pct}%`);
+    /* hit area + interaction */
+    g.append("rect").attr("x",0).attr("y",cy-rowH/2).attr("width",W).attr("height",rowH).attr("fill","transparent");
+    const tipHtml = () => {
+      let when = `${L("chrono-arrival")}: ~${fmtYear(c.from)} – ${fmtYear(c.to)}` + (c.open ? ` (${L("chrono-earlier")})` : "");
+      if (c.burst) when += ` · ✳ ${L("chrono-expansion")} ~${fmtYear(c.burst)}`;
+      return `<div class="t">${esc(c.top)} — ${n} (${pct}%)</div><div class="s">${esc(when)}</div><div class="s" style="margin-top:4px">${esc(c.story[lang]||c.story.sq)}</div>`;
+    };
+    const act = () => { hideTip(); state.lineage = sel ? [] : [c.top]; update(); };
+    g.on("mousemove", ev => showTip(tipHtml(), ev)).on("mouseleave", hideTip).on("click", act);
+    g.on("keydown", ev => { if (ev.key==="Enter"||ev.key===" ") { ev.preventDefault(); act(); } });
+  });
+}
+
+/* ============ migration map ============ */
+/* zones/arrows in [lon,lat]; type: cult (cultural), state (political), focus (Albanian lands) */
+const MIG = [
+{ short:{sq:"Neoliti",en:"Neolithic"}, title:{sq:"Neoliti",en:"The Neolithic"}, yrs:{sq:"~6500–3000 p.e.s.",en:"~6500–3000 BC"},
+  summary:{sq:"Bujqësia mbërrin nga Anatolia dhe mbulon Ballkanin brenda pak shekujsh. Gjuetarët-mbledhësit vendas (haplogrupi I) përthithen ose zhduken — vetëm pak degë të tyre mbijetojnë deri sot.",
+           en:"Farming arrives from Anatolia and covers the Balkans within centuries. The native hunter-gatherers (haplogroup I) are absorbed or vanish — only a few of their branches survive to today."},
+  zones:[{type:"cult", ring:[[13,46],[17,48.5],[23,48],[28,45.5],[28,41],[24,38],[21,37.5],[17,40],[13.5,42.5]], label:{sq:"Europa bujqësore",en:"Farming Europe"}, at:[25.2,46.3]}],
+  labels:[{label:{sq:"Gjuetarë-mbledhësit",en:"Hunter-gatherers"}, at:[27,54]},{label:{sq:"Anadolli",en:"Anatolia"}, at:[33.5,39.5]}],
+  arrows:[
+    {clade:"G2-P15", pts:[[33,38.8],[27,39.6],[22,40.4],[20,41.2]], label:"G2"},
+    {clade:"E-V13", pts:[[35.8,35.2],[30,37.2],[24.5,39.2],[20.8,40.6]], label:{sq:"E-V13 (paraardhësit)",en:"E-V13 (ancestors)"}},
+    {clade:"J2a-M410", pts:[[28.5,36.6],[23.5,37.6],[20.3,39.6]], label:"J2a"},
+    {clade:null, dashed:true, pts:[[38,34.5],[31,35.6],[25,36.4],[21,38.8]], label:"E1b-M123 · T1a · J1"}],
+  marks:[],
+  stories:[
+    {clade:"G2-P15", text:{sq:"Bujqit e parë që lëruan tokën e Ballkanit. G2 mbizotëronte ndër ta — sot ka mbetur në vetëm ~1% të linjave, por me larminë më të lartë për mostër në databazë: gjurma e qartë e një populli shumë të vjetër që u mbulua nga valët e mëvonshme.",
+                          en:"The first farmers to till Balkan soil. G2 dominated among them — today it survives in only ~1% of lineages, but with the highest diversity per sample in the database: the clear trace of a very old people overlaid by later waves."}},
+    {clade:"E-V13", text:{sq:"Paraardhësit e E-V13 (dega E-M78) erdhën nga Levanti e Anadolli bashkë me bujqit. Për tre mijëvjeçarë mbetën një linjë e vogël mes shumë të tjerash — shpërthimi i tyre i madh vjen shumë më vonë.",
+                          en:"E-V13's ancestors (the E-M78 branch) came from the Levant and Anatolia with the farmers. For three millennia they remained one small lineage among many — their great explosion comes much later."}},
+    {clade:"J2a-M410", text:{sq:"Vala e parë nga shumë ardhje mesdhetare-anatolike të J2a — do të pasojnë të tjera me kolonitë greke, Romën e Bizantin. Prandaj J2a ka sot larminë më të lartë për mostër ndër kladat e mëdha (48 degë terminale në 120 mostra): shumë familje të vjetra të pavarura, jo një popull i vetëm.",
+                          en:"The first of J2a's many Mediterranean-Anatolian waves — more will follow with the Greek colonies, Rome and Byzantium. That is why J2a today has the highest variety per sample among the big clades (48 terminal branches in 120 samples): many independent old families, not one people."}},
+    {clade:"I2a-M223", text:{sq:"Populli që bujqit gjetën këtu: gjuetarët-mbledhësit e haplogrupit I. Sot mbijetojnë vetëm si degë të rralla e të thella (I2a-M223, I2-L596) — rreth 3% e linjave, dëshmitarët e fundit të Europës para bujqësisë.",
+                          en:"The people the farmers found here: haplogroup I hunter-gatherers. They survive only as rare, deeply divergent twigs (I2a-M223, I2-L596) — about 3% of lineages, the last witnesses of pre-farming Europe."}}],
+  arrived:["I2a-M223"] },
+
+{ short:{sq:"Stepa",en:"Steppe"}, title:{sq:"Dyndja e stepës",en:"The steppe incursion"}, yrs:{sq:"~3500–2500 p.e.s.",en:"~3500–2500 BC"},
+  summary:{sq:"Barinjtë e stepës (kultura Jamnaja) kalojnë Danubin me kuaj e qerre. “Europa e Vjetër” bujqësore shndërrohet rrënjësisht — dhe pikërisht në këtë trazirë, në Ballkan lind E-V13.",
+           en:"Steppe herders (the Yamnaya culture) cross the Danube with horses and wagons. Agricultural “Old Europe” is transformed — and in this upheaval, E-V13 is born in the Balkans."},
+  zones:[{type:"cult", ring:[[29,46],[34,49.5],[42,50],[45,48],[45,45],[36,44.5],[30,44.5]], label:{sq:"Jamnaja (stepa)",en:"Yamnaya (steppe)"}, at:[38.5,47.6]}],
+  labels:[{label:{sq:"Europa e Vjetër",en:"Old Europe"}, at:[16.5,44.5]}],
+  arrows:[
+    {clade:"R1b-M269", pts:[[36,47],[28,45],[23.5,43.5],[21,42.3]], label:{sq:"R1b · barinjtë e stepës",en:"R1b · steppe herders"}},
+    {clade:"R1a-M417", dashed:true, pts:[[35,49.5],[28,50.5],[22,51]], label:{sq:"R1a → drejt veriut",en:"R1a → to the north"}}],
+  marks:[{clade:"E-V13", at:[21.8,41.4], label:{sq:"E-V13 lind këtu",en:"E-V13 born here"}}],
+  stories:[
+    {clade:"R1b-M269", text:{sq:"Dega Z2103 e R1b zbret nga stepa në Ballkan (~2500 p.e.s.) me dyndjet indo-europiane — 326 nga 435 mostrat R1b shqiptare janë pikërisht kjo degë. Bashkë me PF7562 (78 mostra), bëhet shtylla e dytë e popullsisë.",
+                          en:"R1b's Z2103 branch descends from the steppe into the Balkans (~2500 BC) with the Indo-European migrations — 326 of 435 Albanian R1b samples are exactly this branch. With PF7562 (78 samples), it becomes the population's second pillar."}},
+    {clade:"E-V13", text:{sq:"Të gjithë E-V13 e botës rrjedhin nga një burrë që jetoi ~2800 p.e.s., pothuajse me siguri në Ballkan ose pranë tij. Lindja e degës përkon me shkrirjen e botës bujqësore me atë të stepës — përzierja nga e cila do të dalin popujt e mëvonshëm ballkanikë.",
+                          en:"Every E-V13 man on earth descends from one man who lived ~2800 BC, almost certainly in or near the Balkans. The branch's birth coincides with the fusion of the farming and steppe worlds — the blend from which the later Balkan peoples emerge."}},
+    {clade:"R1a-M417", text:{sq:"Vëllai stepik i R1b merr rrugën tjetër: kalon në veri të Karpateve, drejt pyjeve të Europës Lindore. Atje degët M458 e Z280 do të bëhen bërthama e botës sllave — dhe do të kthehen në Ballkan 3000 vjet më vonë.",
+                          en:"R1b's steppe brother takes the other road: north of the Carpathians, into the East European forests. There the M458 and Z280 branches will become the core of the Slavic world — and return to the Balkans 3,000 years later."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13"] },
+
+{ short:{sq:"Bronzi",en:"Bronze"}, title:{sq:"Bronzi i hershëm",en:"The Early Bronze Age"}, yrs:{sq:"~2500–1800 p.e.s.",en:"~2500–1800 BC"},
+  summary:{sq:"Grupe me prejardhje stepike riorganizojnë Ballkanin perëndimor. Përgjatë Adriatikut zbret J2b-L283 — trungu që do të bëhet një nga shenjat gjenetike të botës ilire.",
+           en:"Steppe-descended groups reorganize the western Balkans. Down the Adriatic comes J2b-L283 — the trunk that will become one of the genetic signatures of the Illyrian world."},
+  zones:[{type:"cult", ring:[[15.5,44.5],[18,44.8],[19.5,43],[19.3,42],[17.5,42.3],[15.8,43.3]], label:{sq:"Horizonti Cetina",en:"Cetina horizon"}, at:[15.4,45.2]}],
+  labels:[],
+  arrows:[
+    {clade:"J2b-L283", pts:[[17,46.5],[16.8,44],[18.5,42.5],[19.9,41.3]], label:{sq:"J2b-L283 · bregu adriatik",en:"J2b-L283 · Adriatic coast"}},
+    {clade:"J2b-L283", dashed:true, pts:[[17.5,43.8],[19.5,43.4],[21,42.4]], label:""},
+    {clade:"J2b-M205", dashed:true, pts:[[27,40.2],[23,39.8],[20.8,40.1]], label:"J2b-M205"}],
+  marks:[],
+  stories:[
+    {clade:"J2b-L283", text:{sq:"Mbërrin si një trung i vetëm dhe pastaj degëzohet pa ndërprerje për 4000 vjet — vetëm 2% e çifteve shqiptare ndahen në rrënjë. E gjetur në varrezat e Bronzit të Dalmacisë, është kandidati klasik “ilir”: sot 16% e linjave shqiptare.",
+                          en:"It arrives as a single trunk and then branches uninterrupted for 4,000 years — only 2% of Albanian pairs split at the root. Found in Bronze-Age Dalmatian burials, it is the classic “Illyrian” candidate: today 16% of Albanian lineages."}},
+    {clade:"J2b-M205", text:{sq:"Kushëriri i largët lindor i L283-shit, një rrymë e vogël më vete — sot vetëm 17 mostra.",
+                          en:"L283's distant eastern cousin, a small separate stream — just 17 samples today."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269"] },
+
+{ short:{sq:"Hekuri",en:"Iron"}, title:{sq:"Bronzi i vonë & Hekuri",en:"Late Bronze & Iron Age"}, yrs:{sq:"~1500–800 p.e.s.",en:"~1500–800 BC"},
+  summary:{sq:"Pas shembjes së botës mikenase, E-V13 shpërthen në mënyrë spektakolare — një nga zgjerimet më të mëdha demografike të Europës. Nga kjo trazirë kristalizohen popujt historikë: ilirët në perëndim, trakët në lindje, helenët në jug.",
+           en:"After the Mycenaean collapse, E-V13 explodes spectacularly — one of Europe's greatest demographic expansions. From this turmoil the historic peoples crystallize: Illyrians west, Thracians east, Greeks south."},
+  zones:[{type:"cult", ring:[[14.5,45.5],[18,46],[20,44.5],[21.5,42],[20.5,40],[19,39.8],[18.7,41.5],[16,43.8]], label:{sq:"Ilirët",en:"Illyrians"}, at:[16.4,45.9]},
+         {type:"cult", ring:[[22.5,44],[28,44.5],[28.5,42],[25.5,41],[23,41.8]], label:{sq:"Trakët",en:"Thracians"}, at:[26,44.9]}],
+  labels:[{label:{sq:"Helenët",en:"Greeks"}, at:[22.8,38.3]}],
+  arrows:[
+    {clade:"E-V13", pts:[[21.5,41.8],[23.5,43.8]], label:{sq:"E-V13 · zgjerimi i madh",en:"E-V13 · the great expansion"}},
+    {clade:"E-V13", pts:[[21.5,41.8],[18.8,43.9]], label:""},
+    {clade:"E-V13", pts:[[21.5,41.8],[21.8,39.2]], label:""}],
+  marks:[],
+  stories:[
+    {clade:"E-V13", text:{sq:"46% e çifteve E-V13 shqiptare ndahen që në rrënjë të degës — shenja e një shpërthimi yjor: shumë djem njëherësh, brez pas brezi. Dega bëhet bërthama e popullsive ilire e trake dhe sot është linja e çdo të katërtit shqiptar (28%).",
+                          en:"46% of Albanian E-V13 pairs split right at the branch root — the signature of a star burst: many sons at once, generation after generation. The branch becomes core to the Illyrian and Thracian populations; today it is the lineage of one in four Albanians (28%)."}},
+    {clade:"J2b-L283", text:{sq:"Tashmë i vendosur, degëzohet paralelisht me E-V13 nëpër fiset ilire — dy trungjet rriten bashkë.",
+                          en:"Now established, it branches in parallel with E-V13 through the Illyrian tribes — the two trunks grow together."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+
+{ short:{sq:"Klasike",en:"Classical"}, title:{sq:"Epoka klasike",en:"The Classical age"}, yrs:{sq:"~800–150 p.e.s.",en:"~800–150 BC"},
+  summary:{sq:"Fiset ilire dalin në histori me emra: taulantët, ardianët, dardanët. Grekët ngrenë koloni në bregdet — Epidamnos (Durrësi, 627 p.e.s.) dhe Apolonia. Popullsia e brendshme mbetet e njëjta.",
+           en:"The Illyrian tribes enter history by name: Taulantii, Ardiaei, Dardani. Greeks plant colonies on the coast — Epidamnos (Durrës, 627 BC) and Apollonia. The interior population stays the same."},
+  zones:[],
+  labels:[{label:{sq:"Iliria",en:"Illyria"}, at:[18.8,43.4]},{label:{sq:"Epiri",en:"Epirus"}, at:[20.6,39.5]},
+          {label:{sq:"Maqedonia",en:"Macedon"}, at:[23,41]},{label:{sq:"Helada",en:"Hellas"}, at:[23.5,38.1]},
+          {label:{sq:"Trakia",en:"Thrace"}, at:[26.5,42.3]}],
+  arrows:[
+    {clade:null, dashed:true, pts:[[22.9,37.95],[20.8,39.6],[19.45,41.3]], label:{sq:"kolonitë greke (J2a, E1b…)",en:"Greek colonies (J2a, E1b…)"}}],
+  marks:[],
+  stories:[
+    {clade:null, title:{sq:"Kolonitë bregdetare",en:"The coastal colonies"}, text:{sq:"Kolonistët grekë sjellin një rrymë të re mesdhetare në qytetet e bregut — J2a, E1b e të tjera. Ndikimi mbetet kryesisht urban; malësitë ruajnë përbërjen ilire.",
+                          en:"Greek colonists bring a new Mediterranean stream into the coastal towns — J2a, E1b and others. The impact stays mostly urban; the highlands keep their Illyrian make-up."}},
+    {clade:"R1b-M269", text:{sq:"Degët Z2103 (si BY611, e ardhshmja linjë e Bytyçit) jetojnë tani thellë brenda botës ilire-dardane — “stepikët” janë bërë prej kohësh vendas.",
+                          en:"The Z2103 branches (like BY611, the future Bytyçi line) now live deep inside the Illyrian-Dardanian world — the “steppe people” long since natives."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+
+{ short:{sq:"Roma",en:"Rome"}, title:{sq:"Perandoria Romake",en:"The Roman Empire"}, yrs:{sq:"150 p.e.s.–300 e.s.",en:"150 BC–300 AD"},
+  summary:{sq:"Roma nënshtron Ilirinë (168 p.e.s.) dhe ndërton Rrugën Egnatia. Ushtarë, tregtarë e skllevër nga gjithë perandoria lënë gjurmë të vogla gjenetike; masa e popullsisë mbetet e vjetra.",
+           en:"Rome subdues Illyria (168 BC) and builds the Via Egnatia. Soldiers, traders and slaves from across the empire leave small genetic traces; the population's bulk remains the old one."},
+  zones:[{type:"state", ring:[[-11,36],[-11,50.5],[5,51],[9,48.5],[15,46.5],[20,45.2],[28,45.5],[34,46],[41,43],[45,41.5],[45,33.5],[-11,33.5]], label:{sq:"Perandoria Romake",en:"Roman Empire"}, at:[6,45.5]}],
+  labels:[],
+  arrows:[
+    {clade:null, dashed:true, pts:[[29.5,41],[24.5,40.7],[19.5,41.2]], label:{sq:"Egnatia · ushtarë e tregtarë",en:"Egnatia · soldiers & traders"}},
+    {clade:"R1a-M417", dashed:true, pts:[[39,45.5],[31,43.8],[25,42.6],[20.3,41.8]], label:{sq:"R1a-Z93 · sarmatët?",en:"R1a-Z93 · Sarmatians?"}}],
+  marks:[],
+  stories:[
+    {clade:null, title:{sq:"Përzierja perandorake",en:"The imperial mix"}, text:{sq:"Garnizonet dhe rrugët sjellin individë nga Anadolli, Levanti e Afrika e Veriut: pjesa më e madhe e J1-ve të vonshëm, disa J2a urbane, ndoshta edhe E1b-M81 veriafrikane. Rryma të holla — sot secila nën 3% të linjave.",
+                          en:"Garrisons and roads bring individuals from Anatolia, the Levant and North Africa: most of the later J1, some urban J2a, perhaps the North-African E1b-M81. Thin streams — each under 3% of lineages today."}},
+    {clade:"R1a-M417", title:{sq:"Rruga lindore",en:"The eastern road"}, text:{sq:"Dy familje nga Lezha mbajnë R1a-Z93 — degën “aziatike” të R1a-së, atë të skithëve e sarmatëve, që u nda nga dega europiane ~5300 vjet më parë. Roma vendosi qindra mijëra sarmatë në Ballkan (viti 334); këto linja mund të jenë jehona e tyre e rrallë — ose një ardhje më e vonë nga lindja.",
+                          en:"Two Lezhë families carry R1a-Z93 — R1a's “Asian” branch, that of the Scythians and Sarmatians, split from the European branch ~5,300 years ago. Rome settled hundreds of thousands of Sarmatians in the Balkans (334 AD); these lines may be their rare echo — or a later arrival from the east."}},
+    {clade:"E-V13", text:{sq:"Nën paqen romake, linjat ilire (E-V13, J2b, R1b) vazhdojnë pa u prekur në brendësi — vazhdimësia që do t’i japë Mesjetës popullin arbëror.",
+                          en:"Under the Roman peace the Illyrian lineages (E-V13, J2b, R1b) continue untouched inland — the continuity that will hand the Middle Ages the Albanian people."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+
+{ short:{sq:"Dyndjet",en:"Migrations"}, title:{sq:"Dyndjet e mëdha",en:"The Great Migrations"}, yrs:{sq:"300–800 e.s.",en:"300–800 AD"},
+  summary:{sq:"Perandoria çahet. Gotët kalojnë Ballkanin (I1), pastaj sllavët vendosen masivisht (I2a-Din, R1a). Paraardhësit e shqiptarëve mbahen në malësitë — atje ku vazhdimësia nuk u këput kurrë.",
+           en:"The empire cracks. Goths pass through the Balkans (I1), then Slavs settle en masse (I2a-Din, R1a). The Albanians' ancestors hold out in the highlands — where continuity was never broken."},
+  zones:[{type:"state", ring:[[13,45.8],[20,46],[28,45.5],[29,43.5],[41,42],[45,40],[45,33.5],[13,33.5]], label:{sq:"Bizanti",en:"Byzantium"}, at:[31,37.5]},
+         {type:"cult", ring:[[22,49],[24,53],[30,54],[34,52],[33,49.5],[27,48.5]], label:{sq:"Djepi sllav",en:"Slavic homeland"}, at:[28.5,54.8]}],
+  labels:[],
+  arrows:[
+    {clade:"I1-M253", pts:[[13,57.5],[16,53],[19,48],[20,42.7]], label:{sq:"I1 · gotët",en:"I1 · the Goths"}},
+    {clade:"I2a-L460", pts:[[27,50.5],[24.5,46],[22,43.2],[20.5,41.8]], label:{sq:"I2a-Din · sllavët",en:"I2a-Din · the Slavs"}},
+    {clade:"R1a-M417", pts:[[30.5,50.5],[27,45.8],[24,43],[22.3,42.2]], label:"R1a", li:0}],
+  marks:[],
+  stories:[
+    {clade:"I1-M253", text:{sq:"Prejardhje nordike, por jo vikinge: linjat ballkanike të I1 takohen ≤1600 vjet më parë — koha e gotëve, jo e vikingëve. Një themelues i vetëm (Y60985) do të lërë 39 pasardhës të sotëm në Pukë e Kosovë, të shkrirë tërësisht në fiset Kabash, Kryezi e Bytyç.",
+                          en:"Nordic origin, but not Viking: Balkan I1 lineages coalesce ≤1,600 years ago — Gothic timing, not Viking. A single founder (Y60985) will leave 39 present-day descendants in Pukë and Kosovo, fully absorbed into the Kabash, Kryezi and Bytyçi clans."}},
+    {clade:"I2a-L460", text:{sq:"Jo refugjatë vendas të dyndjes, por pjesë e saj: dega “dinarike” (Y3120/PH908) rrjedh nga pyjet e Polesias, ku ishte sllavizuar shekuj para nisjes, krah R1a-së. Mbërrin si linjë tërësisht sllave — dhe në trojet shqiptare shqiptarizohet, deri në themel të fiseve si Shala.",
+                          en:"Not native refugees of the invasion but part of it: the “Dinaric” branch (Y3120/PH908) stems from the Polesian forests, Slavicized centuries before departure alongside R1a. It arrives as a fully Slavic lineage — and in the Albanian lands is Albanianized, down to founding clans like Shala."}},
+    {clade:"R1a-M417", text:{sq:"Kthimi nga veriu: pas 3000 vjetësh, degët M458 e Z280 — tani zemra e botës sllave — zbresin në Ballkan (77% e R1a-ve shqiptare). Rruga vërtetohet nga dega L1029, përputhja më e afërt e lashtë e së cilës është një sllav i shek. XII nga Gjermania verilindore; një themelues i vetëm (Y133361) la 23 pasardhës të sotëm rreth Dibrës e Korçës.",
+                          en:"The return from the north: after 3,000 years, the M458 and Z280 branches — now the heart of the Slavic world — descend into the Balkans (77% of Albanian R1a). The route is confirmed by the L1029 branch, whose closest ancient match is a 12th-century Slav from northeastern Germany; a single founder (Y133361) left 23 present-day descendants around Dibër and Korçë."}},
+    {clade:"E-V13", text:{sq:"Linjat e vjetra (E-V13, J2b-L283, R1b) tkurren drejt malësive dhe mbijetojnë. Nga kjo bërthamë vazhdimësie do të dalë populli që burimet mesjetare do ta quajnë arbëror.",
+                          en:"The old lineages (E-V13, J2b-L283, R1b) contract into the highlands and survive. From this core of continuity will emerge the people medieval sources call Albanian."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+
+{ short:{sq:"Mesjeta",en:"Medieval"}, title:{sq:"Mesjeta & Arbanoni",en:"The Middle Ages & Arbanon"}, yrs:{sq:"800–1400 e.s.",en:"800–1400 AD"},
+  summary:{sq:"Bizanti, Rashka e Bullgaria ndajnë Ballkanin. Rreth vitit 1079 burimet bizantine përmendin për herë të parë arbërit; më vonë principata e Arbanonit. Normanët sulmojnë Durrësin (1081). Në malësi lind sistemi i fiseve — dhe disa linja shpërthejnë përmes tij.",
+           en:"Byzantium, Rascia and Bulgaria share the Balkans. Around 1079 Byzantine sources first mention the Albanians; later comes the principality of Arbanon. Normans assault Durrës (1081). In the highlands the fis system is born — and some lineages explode through it."},
+  zones:[{type:"focus", ring:[[19.3,42.3],[20.6,42.4],[21,41.4],[20.2,40.5],[19.4,40.9]], label:{sq:"Arbanoni",en:"Arbanon"}, at:[18.4,40.2]}],
+  labels:[{label:{sq:"Bizanti",en:"Byzantium"}, at:[26,39.5]},{label:{sq:"Rashka",en:"Rascia"}, at:[20.6,43.8]},
+          {label:{sq:"Bullgaria",en:"Bulgaria"}, at:[25.5,43]}],
+  arrows:[
+    {clade:null, dashed:true, pts:[[16.3,41.1],[17.9,41.1],[19.35,41.3]], label:{sq:"normanët",en:"the Normans"}}],
+  marks:[{clade:"E-V13", at:[20,42.1], label:{sq:"fiset zgjerohen",en:"clans expand"}}],
+  stories:[
+    {clade:null, title:{sq:"Arbanoni",en:"Arbanon"}, text:{sq:"Rreth Krujës burimet bizantine shquajnë arbërit — populli që mban linjat e vjetra ballkanike. Vërtetimi gjenetik: pemët e fiseve tona nisin pikërisht në këta shekuj.",
+                          en:"Around Kruja, Byzantine sources single out the Albanians — the people carrying the old Balkan lineages. The genetic confirmation: our clans' family trees begin precisely in these centuries."}},
+    {clade:"E-V13", title:{sq:"Lindja e fiseve",en:"The birth of the fis"}, text:{sq:"Themelues të veçantë lënë qindra pasardhës: BY611>A24000 te Bytyçi, Y60985 te Kabashi, degët e Berishës e Krasniqes. Kush ishte i pasur në djem, sot është i pasur në mostra — pavarësisht se ç’haplogrup mbante.",
+                          en:"Individual founders leave hundreds of descendants: BY611>A24000 in Bytyçi, Y60985 in Kabash, the Berisha and Krasniqi branches. Whoever was rich in sons is rich in samples today — whatever haplogroup he carried."}},
+    {clade:"I1-M253", title:{sq:"Normanët",en:"The Normans"}, text:{sq:"Pasardhësit e vikingëve të Normandisë marrin Durrësin më 1081. Ndonjë linjë e rrallë perëndimore (I1-L22, R1b-L51) mund të ketë hyrë me ta — rryma të vogla, të pasigurta.",
+                          en:"Normandy's Viking descendants take Durrës in 1081. The occasional rare western lineage (I1-L22, R1b-L51) may have entered with them — small, uncertain streams."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
+
+{ short:{sq:"Osmane",en:"Ottoman"}, title:{sq:"Periudha osmane",en:"The Ottoman era"}, yrs:{sq:"1400–1912",en:"1400–1912"},
+  summary:{sq:"Pas rënies së Shkodrës (1479) shumë arbër ikin në Itali — arbëreshët marrin me vete gjithë mozaikun gjenetik. Nga lindja hyn një rrymë e hollë me administratën. Malësitë ruajnë gjenealogjitë që sot lexohen në ADN.",
+           en:"After Shkodra falls (1479) many Albanians flee to Italy — the Arbëreshë carry the whole genetic mosaic with them. A thin stream enters from the east with the administration. The highlands preserve the genealogies we now read in DNA."},
+  zones:[{type:"state", ring:[[15.5,44],[20,46.2],[28,46.5],[45,43.5],[45,33.5],[19,33.5],[15.5,40]], label:{sq:"Perandoria Osmane",en:"Ottoman Empire"}, at:[33,44.8]}],
+  labels:[],
+  arrows:[
+    {clade:null, pts:[[19.6,40.4],[17.8,39.9],[16.4,39.3]], label:{sq:"arbëreshët → Italia",en:"Arbëreshë → Italy"}, li:1},
+    {clade:null, dashed:true, pts:[[31,39.5],[25,40.3],[20.6,41.2]], label:{sq:"administrata (J1, J2a)",en:"administration (J1, J2a)"}}],
+  marks:[],
+  stories:[
+    {clade:null, title:{sq:"Arbëreshët",en:"The Arbëreshë"}, text:{sq:"Komunitetet e Kalabrisë e Siçilisë janë një kapsulë kohore gjenetike: E-V13, J2b-L283, R1b — i njëjti mozaik si trojet, i ngrirë në shek. XV.",
+                          en:"The Calabrian and Sicilian communities are a genetic time capsule: E-V13, J2b-L283, R1b — the same mosaic as the homeland, frozen in the 15th century."}},
+    {clade:"J1-M267", text:{sq:"Vala e fundit lindore: nëpunës, ushtarë e tregtarë osmanë shtojnë linja të reja J1 e J2a nëpër qytete — rryma e fundit para epokës moderne.",
+                          en:"The last eastern wave: Ottoman officials, soldiers and traders add new J1 and J2a lines in the towns — the final stream before the modern era."}},
+    {clade:"E-V13", title:{sq:"Deri te 2128 mostrat",en:"Down to the 2,128 samples"}, text:{sq:"Çdo mostër e databazës është pika fundore e njërës prej këtyre nëntë skenave. Larmia brenda çdo klade — e madhe a e vogël — është ora që mat se kur nisi rrugëtimi i saj.",
+                          en:"Every sample in the database is the endpoint of one of these nine scenes. The diversity within each clade — great or small — is the clock that tells when its journey began."}}],
+  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
+];
+
+let migIdx = 0;
+function renderMig(){
+  const era = MIG[migIdx];
+  /* slider stop labels */
+  document.getElementById("mig-stops").innerHTML = MIG.map((e,i) =>
+    `<button class="${i===migIdx?"on":""}" data-i="${i}">${esc(e.short[lang]||e.short.sq)}</button>`).join("");
+  document.querySelectorAll("#mig-stops button").forEach(b => b.onclick = () => { migIdx=+b.dataset.i; document.getElementById("mig-range").value=migIdx; renderMig(); });
+  document.getElementById("mig-range").value = migIdx;
+
+  /* ---- map ---- */
+  const svg = d3.select("#migmap");
+  svg.selectAll("*").remove();
+  const W=720, H=560;
+  const proj = d3.geoConicEqualArea().parallels([38,56]).rotate([-18,0]);
+  proj.fitExtent([[6,6],[W-6,H-6]], {type:"Polygon", coordinates:[[[-11,34],[-11,62],[45,62],[45,34],[-11,34]]]});
+  proj.clipExtent([[0,0],[W,H]]);
+  const pathGen = d3.geoPath(proj);
+  svg.append("path").attr("class","land").attr("d", pathGen(window.__EUROPE__));
+
+  const zg = svg.append("g");
+  for (const z of era.zones){
+    const ring = z.ring.concat([z.ring[0]]);
+    zg.append("path").attr("class","zone-"+z.type).attr("d", pathGen({type:"Polygon", coordinates:[ring]}));
+    const p = proj(z.at);
+    zg.append("text").attr("class","zone-label").attr("x",p[0]).attr("y",p[1]).attr("text-anchor","middle").text((z.label[lang]||z.label.sq));
+  }
+  for (const lb of (era.labels||[])){
+    const p = proj(lb.at);
+    zg.append("text").attr("class","zone-label").attr("x",p[0]).attr("y",p[1]).attr("text-anchor","middle").attr("opacity",.75).text(lb.label[lang]||lb.label.sq);
+  }
+
+  const ag = svg.append("g");
+  const line = d3.line().curve(d3.curveCatmullRom.alpha(.8));
+  for (const a of era.arrows){
+    const col = a.clade ? (hapColor(a.clade)||css("--sO")) : css("--ink2");
+    const pts = a.pts.map(p=>proj(p));
+    ag.append("path").attr("d", line(pts)).attr("fill","none")
+      .attr("stroke",col).attr("stroke-width",2.6).attr("stroke-linecap","round")
+      .attr("stroke-dasharray", a.dashed ? "7 5" : null).attr("opacity",.92);
+    /* arrowhead from final segment direction */
+    const [x1,y1] = pts[pts.length-2], [x2,y2] = pts[pts.length-1];
+    const ang = Math.atan2(y2-y1, x2-x1), s=8;
+    ag.append("path").attr("fill",col).attr("opacity",.92)
+      .attr("d",`M${x2},${y2} L${x2-s*Math.cos(ang-0.45)},${y2-s*Math.sin(ang-0.45)} L${x2-s*Math.cos(ang+0.45)},${y2-s*Math.sin(ang+0.45)} Z`);
+    const lbl = typeof a.label==="string" ? a.label : (a.label[lang]||a.label.sq);
+    if (lbl){
+      const mid = pts[a.li !== undefined ? a.li : Math.max(0, Math.floor(pts.length/2)-1)];
+      ag.append("text").attr("class","arrow-label").attr("x",mid[0]+6).attr("y",mid[1]-7).text(lbl);
+    }
+  }
+  for (const m of (era.marks||[])){
+    const p = proj(m.at), col = hapColor(m.clade)||css("--accent");
+    const st = svg.append("g");
+    for (let d=0; d<180; d+=45)
+      st.append("line").attr("x1",p[0]-7*Math.cos(d*Math.PI/180)).attr("y1",p[1]-7*Math.sin(d*Math.PI/180))
+        .attr("x2",p[0]+7*Math.cos(d*Math.PI/180)).attr("y2",p[1]+7*Math.sin(d*Math.PI/180))
+        .attr("stroke",col).attr("stroke-width",2);
+    st.append("circle").attr("cx",p[0]).attr("cy",p[1]).attr("r",2.6).attr("fill",col).attr("stroke",css("--page")).attr("stroke-width",1);
+    st.append("text").attr("class","arrow-label").attr("x",p[0]+11).attr("y",p[1]+4).text(m.label[lang]||m.label.sq);
+  }
+
+  /* ---- story panel ---- */
+  const chipHtml = c => {
+    if (!c) return "";
+    const on = state.lineage.length && state.lineage[0]===c;
+    return `<button class="mig-chip ${on?"on":""}" data-clade="${esc(c)}"><span class="sw" style="background:${hapColor(c)||css("--sO")}"></span>${esc(c)}</button>`;
+  };
+  const st = document.getElementById("mig-story");
+  st.innerHTML =
+    `<h3>${esc(era.title[lang]||era.title.sq)}</h3><div class="yrs">${esc(era.yrs[lang]||era.yrs.sq)}</div>` +
+    `<p class="summ">${esc(era.summary[lang]||era.summary.sq)}</p>` +
+    era.stories.map(s => {
+      const head = s.clade ? chipHtml(s.clade) : `<span class="mig-chip neutral">${esc((s.title&&(s.title[lang]||s.title.sq))||"·")}</span>`;
+      const extra = (s.clade && s.title) ? ` <span style="font-size:12.5px;font-weight:600">${esc(s.title[lang]||s.title.sq)}</span>` : "";
+      return `<div class="mstory">${head}${extra}<p>${esc(s.text[lang]||s.text.sq)}</p></div>`;
+    }).join("") +
+    `<div class="mig-arrived"><span class="lbl">${L("mig-arrived")}</span>` +
+      era.arrived.map(chipHtml).join("") + `</div>`;
+  st.querySelectorAll(".mig-chip[data-clade]").forEach(b => b.onclick = () => {
+    const c = b.dataset.clade;
+    state.lineage = (state.lineage.length===1 && state.lineage[0]===c) ? [] : [c];
+    update();
+  });
+}
+document.getElementById("mig-range").addEventListener("input", ev => { migIdx = +ev.target.value; renderMig(); });
+
+/* ============ region bars ============ */
+function renderBars(){
+  const data = filteredNoQark();
+  const byQ = Array.from(d3.group(data, s=>s.qark), ([q,v])=>({q, n:v.length, v})).sort((a,b)=>b.n-a.n);
+  const TOPN = 16;
+  const rows = byQ.slice(0, TOPN);
+  const rest = byQ.slice(TOPN);
+  if (rest.length) rows.push({ q:null, n:d3.sum(rest,r=>r.n), v:rest.flatMap(r=>r.v) });
+  const el = document.getElementById("rbars");
+  el.innerHTML = rows.map(r => {
+    const counts = HAPS.map(h=>r.v.filter(s=>hapKey(s)===h).length);
+    const segs = counts.map((n,i)=> n ? `<div class="seg" style="flex:${n};background:var(${hapVar(HAPS[i]===OTHER?"":HAPS[i])})"></div>` : "").join("");
+    const name = r.q === null ? L("other-regions") : r.q;
+    return `<div class="rrow ${r.q!==null && state.qark===r.q?"sel":""}" data-q="${r.q===null?"":esc(r.q)}" tabindex="0" role="button">
+      <div class="rname">${esc(name)}</div><div class="rbar">${segs}</div><div class="rn">${r.n.toLocaleString()}</div></div>`;
+  }).join("");
+  el.querySelectorAll(".rrow").forEach((rowEl, idx) => {
+    const r = rows[idx];
+    const act = () => { if (r.q===null) return; state.qark = state.qark===r.q ? null : r.q; update(); };
+    rowEl.onclick = act;
+    rowEl.onkeydown = ev => { if (ev.key==="Enter"||ev.key===" ") { ev.preventDefault(); act(); } };
+    rowEl.onmousemove = ev => {
+      const pairs = HAPS.map(h=>[h, r.v.filter(s=>hapKey(s)===h).length]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+      showTip(`<div class="t">${esc(r.q===null?L("other-regions"):r.q)}</div>` +
+        pairs.map(([h,n])=>`<div class="rowline"><span class="sw" style="background:${hapColor(SLOT[h]?h:"")||css("--sO")}"></span>${esc(hapLabel(h))}<span class="n">${n} · ${(100*n/r.n).toFixed(0)}%</span></div>`).join(""), ev);
+    };
+    rowEl.onmouseleave = hideTip;
+  });
+}
+
+/* ============ table ============ */
+let page = 0; const PER = 20;
+function renderTable(){
+  const f = filtered();
+  const pages = Math.max(1, Math.ceil(f.length / PER));
+  if (page >= pages) page = pages - 1;
+  const rows = f.slice(page*PER, page*PER+PER);
+  const u = L("unknown");
+  document.getElementById("tbody").innerHTML = rows.map(s => {
+    const chainHtml = s.chain.map((x,i) => i===s.chain.length-1 ? `<b>${esc(x)}</b>` : esc(x)).join(" › ");
+    return `<tr>
+      <td><span class="hapdot" style="background:var(${hapVar(s.top)})"></span>${esc(s.top)}</td>
+      <td>${s.surname?esc(s.surname):`<span class="dimc">${u}</span>`}</td>
+      <td>${s.fis?esc(s.fis):`<span class="dimc">${u}</span>`}</td>
+      <td>${esc(s.rreth)||u}</td><td>${esc(s.qark)||u}</td><td>${esc(s.country)||u}</td>
+      <td class="chaincell">${chainHtml}</td></tr>`;
+  }).join("");
+  document.getElementById("table-count").textContent = `${f.length.toLocaleString()} ${L("samples-shown")}`;
+  document.getElementById("pg-info").textContent = `${L("page")} ${page+1} ${L("of")} ${pages}`;
+  document.getElementById("pg-prev").disabled = page===0;
+  document.getElementById("pg-next").disabled = page>=pages-1;
+}
+document.getElementById("pg-prev").onclick = () => { page--; renderTable(); };
+document.getElementById("pg-next").onclick = () => { page++; renderTable(); };
+
+/* ============ match tool ============ */
+function runMatch(){
+  const raw = document.getElementById("match-q").value.trim();
+  const out = document.getElementById("match-out");
+  if (!raw){ out.innerHTML=""; return; }
+  const tokens = raw.split(/[>|,;\s]+/).filter(Boolean).map(t=>t.toUpperCase());
+  const bare = t => t.replace(/^[A-Z][0-9]*[AB]?-/i,"").toUpperCase();
+  const tokSet = tokens.map(t => [t, bare(t)]);
+  const scored = [];
+  for (const s of samples){
+    const up = s.chain.map(x=>x.toUpperCase());
+    const upBare = up.map(bare);
+    let hits = [], deepest = -1;
+    for (const [t,tb] of tokSet){
+      let idx = up.indexOf(t); if (idx<0) idx = upBare.indexOf(tb);
+      if (idx>=0){ hits.push(idx); deepest = Math.max(deepest, idx); }
+    }
+    if (hits.length) scored.push({ s, hits:new Set(hits), n:hits.length, deepest });
+  }
+  scored.sort((a,b) => b.n - a.n || b.deepest - a.deepest || b.s.chain.length - a.s.chain.length);
+  if (!scored.length){ out.innerHTML = `<p class="none">${L("match-none")}</p>`; return; }
+  const top = scored.slice(0, 15);
+  const u = L("unknown");
+  out.innerHTML = `<div class="scroll-x"><table class="samples"><thead><tr>
+      <th>${L("match-shared")}</th><th>${L("th-fis")}</th><th>${L("th-rreth")}</th><th>${L("th-qark")}</th><th>${L("th-country")}</th><th>${L("th-chain")}</th>
+    </tr></thead><tbody>` +
+    top.map(({s,hits,n}) => `<tr>
+      <td style="font-variant-numeric:tabular-nums"><b>${n}</b> / ${tokens.length}</td>
+      <td>${s.fis?esc(s.fis):`<span class="dimc">${u}</span>`}</td>
+      <td>${esc(s.rreth)||u}</td><td>${esc(s.qark)||u}</td><td>${esc(s.country)||u}</td>
+      <td>${s.chain.map((x,i)=>`<span class="snp ${hits.has(i)?"hit":""}">${esc(x)}</span>`).join(" ")}</td>
+    </tr>`).join("") + `</tbody></table></div>` +
+    (scored.length>15 ? `<p class="desc" style="margin-top:10px">+ ${scored.length-15} …</p>` : "");
+}
+document.getElementById("match-btn").onclick = runMatch;
+document.getElementById("match-q").addEventListener("keydown", ev => { if (ev.key==="Enter") runMatch(); });
+
+/* ============ wiring ============ */
+let qTimer = null;
+document.getElementById("q").addEventListener("input", ev => {
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => { state.q = ev.target.value.trim(); update(); }, 250);
+});
+document.getElementById("clear-btn").onclick = () => {
+  state.lineage=[]; state.qark=null; state.country=null; state.fis=null; state.q="";
+  document.getElementById("q").value="";
+  update();
+};
+document.getElementById("lang-sq").onclick = () => { lang="sq"; saveLang("sq"); renderStatic(); update(); };
+document.getElementById("lang-en").onclick = () => { lang="en"; saveLang("en"); renderStatic(); update(); };
+
+function update(){
+  page = 0;
+  renderStats();
+  renderFilterBar();
+  renderSunburst();
+  renderMapPies();
+  renderChrono();
+  renderMig();
+  renderBars();
+  renderTable();
+}
+
+/* re-render charts when theme flips (colors are read from CSS vars at render time) */
+const reTheme = () => { projection=null; renderMapBase(); update(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", reTheme);
+new MutationObserver(muts => { if (muts.some(m=>m.attributeName==="data-theme")) reTheme(); })
+  .observe(document.documentElement, { attributes:true });
+
+renderStatic();
+renderMapBase();
+update();
+})();
+</script>
