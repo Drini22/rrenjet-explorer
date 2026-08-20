@@ -587,26 +587,32 @@ const toObj = n => ({ name:n.name, end:n.end, fis:n.fis, children:Array.from(n.c
 
 /* Fis written on the arc ONLY where the fis↔branch link is documented on rrenjet.com
    (fis articles, lineage articles, or keymaster forum posts) AND the branch is
-   dominated by that fis in the database. Curated 2026-08-19. */
+   dominated by that fis in the database. Curated 2026-08-19; re-audited 2026-08-20
+   against the full article texts, not just proximity matches. */
 const FIS_NODES = {
-  "Z38299":"Krasniqe",      /* J2b — article j-ph1751z38299 */
-  "Y229591":"Nikaj",        /* J2b — article gashi-i-gurit-nikaj-krasniqe */
-  "Y252971":"Gash",         /* J2b — forum #3847: "trungu gjenetik i gashit të vjetër" */
-  "FT134628":"Kastrat",     /* J2b — article j-ph1751z38299 */
-  "Y21878":"Hot",           /* J2b — article fisi-hot */
-  "Y23094":"Shkrel",        /* J2b — article fisi-shkrel */
-  "Y257550":"Çidhën",       /* J2b — article j-y82533 */
-  "FGC33625":"Berishë",     /* E-V13 — rezultatet 2021 + article berisha */
-  "Z16988":"Kelmend",       /* E-V13 — rezultatet 2021 */
-  "Y282207":"Thaç",         /* E-V13 — article e-ph2180 */
-  "Y230317":"Gash-Bardhë",  /* E-V13 — article e-ph2180 */
-  "Y194482":"Berishë e Kuqe", /* forum #3701 (fiset malësore) */
-  "FT70142":"Sop",          /* article berisha */
-  "BY168279":"Triesh",      /* E-V13 — forum fiset-malesore: Kuçi + Trieshi, TMRCA ~700 vjet */
-  "BY20093":"Kthellë",      /* article selita */
-  "A24000":"Bytyç",         /* R1b — article fisi-bytyc */
-  "FT427692":"Thaç-Zogaj",  /* R1b — forum #3701 */
-  "Y83965":"Shalë",         /* R1b PF7563 — forum #4031: "shalen në malet e dukagjinit" */
+  /* — the Y126399 trunk (article gashi-i-gurit-nikaj-krasniqe): one man ~700-900 y ago
+       fathered BOTH branches below; Gashi i Gurit split off first, Nikaj & Krasniqe
+       share a closer ancestor (~600-700 y). Z38299 is a broad umbrella — no label. — */
+  "Y252971":"Gashi i Gurit", /* J2b — the elder branch; forum #3847 "trungu i gashit të vjetër" */
+  "Y229494":"Nikaj·Krasniqe",/* J2b — their shared ancestor per the article */
+  "Y162882":"Krasniqe",      /* J2b — main Krasniqi brotherhoods (Kolmekshi, Hysenmekshi, Kolgeci) */
+  "Y229591":"Nikaj",         /* J2b — Nikaj line */
+  "Y236853":"Kastrat",       /* J2b — pure Kastrat node under Z38299>FT134628 (FT134628 is mixed) */
+  "Y21878":"Hot",            /* J2b — fisi-hot: "linja kryesore e Hotit" Y21878>FT125046>FT124983 */
+  "CTS8786":"Shkrel",        /* J2b — fisi-shkrel: Shkreli = Y23094>Y82533>CTS8786 (Y23094 is shared) */
+  "Y91573":"Berishë",        /* E-V13 — berisha: "rezultatet nga fisi Berishë i takojnë Y93102>Y91573" */
+  "Z16988":"Kelmend",        /* E-V13 — rezultatet 2021 rows; dominant Kelmend branch */
+  "Y282207":"Thaç",          /* E-V13 — e-ph2180: Thaçi i Pukës under Y30588 */
+  "Y230317":"Gash-Bardhë",   /* E-V13 — e-ph2180: "Gashi i Bardhë, Shipshani" */
+  "Y194482":"Berishë e Kuqe",/* E-V13 — e-ph2180 + forum #3701 */
+  "FT70142":"Sop",           /* E-V13 — berisha: "Y93102>FT70142, familje Sop dhe Morinë" */
+  "BY168279":"Kuç·Triesh",   /* E-V13 — forum fiset-malesore: Kuçi + Trieshi shqiptar, TMRCA ~700 vjet */
+  "BY20093":"Kthellë",       /* E-V13 — article selita */
+  "A24000":"Bytyç",          /* R1b — fisi-bytyc: BY611>Z2705>A24000, Bytyçi i Malësisë */
+  "A41146":"Thaç-Zogaj",     /* R1b — article trungu-gjenetik-i-zogajve: "A41146 i takon vetëm Zogajve" */
+  "Y83965":"Shalë",          /* R1b PF7563 — forum #4031: "shalen në malet e dukagjinit" */
+  /* dropped after re-audit: Z38299="Krasniqe" (umbrella over all three tribes + Kastrat etc.),
+     Y257550="Çidhën" (article j-y82533: that branch is also in Labëri and Greece) */
 };
 function fisLine(fisObj){
   const entries = Object.entries(fisObj||{}).sort((a,b)=>b[1]-a[1]);
