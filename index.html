@@ -591,12 +591,13 @@ const toObj = n => ({ name:n.name, end:n.end, fis:n.fis, children:Array.from(n.c
    against the full article texts, not just proximity matches. */
 const FIS_NODES = {
   /* — the Y126399 trunk (article gashi-i-gurit-nikaj-krasniqe): one man ~700-900 y ago
-       fathered BOTH branches below; Gashi i Gurit split off first, Nikaj & Krasniqe
-       share a closer ancestor (~600-700 y). Z38299 is a broad umbrella — no label. — */
+       fathered both branches; fis identities NEST — a later tribe's label sits inside
+       its parent branch. Nikaj split out of the Krasniqi founding line (~600-700 y),
+       so "Nikaj" nests under the "Krasniqe" label. Z38299 is a broad umbrella — no label. — */
   "Y252971":"Gashi i Gurit", /* J2b — the elder branch; forum #3847 "trungu i gashit të vjetër" */
-  "Y229494":"Nikaj·Krasniqe",/* J2b — their shared ancestor per the article */
-  "Y162882":"Krasniqe",      /* J2b — main Krasniqi brotherhoods (Kolmekshi, Hysenmekshi, Kolgeci) */
-  "Y229591":"Nikaj",         /* J2b — Nikaj line */
+  "Y229494":"Krasniqe",      /* J2b — the Krasniqi founding line (Kolmekshi, Hysenmekshi, Kolgeci);
+                                Nikaj later split from it and nests below */
+  "Y229591":"Nikaj",         /* J2b — split out of Krasniqe ~600-700 y ago */
   "Y236853":"Kastrat",       /* J2b — pure Kastrat node under Z38299>FT134628 (FT134628 is mixed) */
   "Y21878":"Hot",            /* J2b — fisi-hot: "linja kryesore e Hotit" Y21878>FT125046>FT124983 */
   "CTS8786":"Shkrel",        /* J2b — fisi-shkrel: Shkreli = Y23094>Y82533>CTS8786 (Y23094 is shared) */
@@ -606,7 +607,8 @@ const FIS_NODES = {
   "Y230317":"Gash-Bardhë",   /* E-V13 — e-ph2180: "Gashi i Bardhë, Shipshani" */
   "Y194482":"Berishë e Kuqe",/* E-V13 — e-ph2180 + forum #3701 */
   "FT70142":"Sop",           /* E-V13 — berisha: "Y93102>FT70142, familje Sop dhe Morinë" */
-  "BY168279":"Kuç·Triesh",   /* E-V13 — forum fiset-malesore: Kuçi + Trieshi shqiptar, TMRCA ~700 vjet */
+  "BY168279":"Triesh",       /* E-V13 — forum fiset-malesore: the Kuçi/Triesh line, TMRCA ~700 vjet;
+                                DB samples on it are Triesh families */
   "BY20093":"Kthellë",       /* E-V13 — article selita */
   "A24000":"Bytyç",          /* R1b — fisi-bytyc: BY611>Z2705>A24000, Bytyçi i Malësisë */
   "A41146":"Thaç-Zogaj",     /* R1b — article trungu-gjenetik-i-zogajve: "A41146 i takon vetëm Zogajve" */
