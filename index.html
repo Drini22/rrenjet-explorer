@@ -879,9 +879,11 @@ const CHRONO = [
   { top:"I2a-L460", from:550, to:800, story:{
     sq:"Dega “dinarike” (PH908): klada I2 është e lashtë europiane, por linjat e sotme u përhapën me dyndjet sllave (~600–800 e.s.) — larmi e ulët, moshë e re lokale.",
     en:"The “Dinaric” branch (PH908): the I2 clade is ancient European, but today's lineages spread with the Slavic migrations (~600–800 AD) — low diversity, young local age." } },
-  { top:"R1a-M417", from:550, to:850, story:{
-    sq:"Kryesisht degët M458 e Z280, të lidhura me dyndjet sllave të Mesjetës së hershme. Përjashtim: dy linja Z93 — dega e skithëve e sarmatëve — që mund të kenë ardhur nga lindja qysh në epokën romake.",
-    en:"Mostly the M458 and Z280 branches, tied to the early-medieval Slavic migrations. Exception: two Z93 lines — the Scythian/Sarmatian branch — which may have arrived from the east as early as the Roman era." } },
+  { top:"R1a-M417", label:"R1a-M458/Z280", from:550, to:850,
+    count: s => s.top==="R1a-M417" && (s.chain.includes("M458") || s.chain.includes("Z280")),
+    story:{
+    sq:"Degët M458 e Z280, të ardhura bashkë me dyndjet sllave të Mesjetës së hershme. Në jug, grupimi YP3994 lidh familjet çame me ato labe (~800–1000 vjet) — degë sllave e shqiptarizuar plotësisht. Përjashtim më vete: një familje Z93 nga Lezha, ndoshta me prejardhje sarmate të epokës romake — shih hartën.",
+    en:"The M458 and Z280 branches, arriving together with the early-medieval Slavic migrations. In the south, the YP3994 cluster links Cham and Lab families (~800–1,000 years) — a Slavic branch fully Albanianized. A separate exception: one Z93 family from Lezha, possibly of Roman-era Sarmatian origin — see the map." } },
 ];
 const fmtYear = y => y < 0 ? `${-y} ${lang==="sq"?"p.e.s.":"BC"}` : `${y} ${lang==="sq"?"e.s.":"AD"}`;
 
