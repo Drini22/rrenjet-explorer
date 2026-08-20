@@ -825,12 +825,14 @@ const ERAS = [
   { sq:"Osmane",   en:"Ottoman",    from:1400,  to:1912 },
 ];
 const CHRONO = [
-  { top:"I2a-M223", open:true, from:-8000, to:-6200, story:{
-    sq:"Shtresa më e vjetër — gjuetarë-mbledhësit e Europës para bujqësisë. Degë të rralla e të thella (bashkë me I2-L596); disa linja mund të kenë ardhur edhe më vonë nga veriu.",
-    en:"The oldest layer — Europe's pre-farming hunter-gatherers. Rare, deeply divergent twigs (together with I2-L596); some branches may also have arrived later from the north." } },
+  { top:"I2-L596", label:"I2 (relike)", noclick:true, open:true, from:-8000, to:-6200,
+    count: s => s.top==="I2-L596" || (s.top==="I2a-L460" && s.chain.length>2 && !s.chain.includes("L621")),
+    story:{
+    sq:"Mbijetuesit e vërtetë të Europës së gjuetarëve: degë të rralla e të thella si I2-L596, I2a-CTS595 (L160, S21825) dhe L161 — rreth 1% e linjave, dëshmitarët e fundit të botës para bujqësisë.",
+    en:"The true survivors of hunter-gatherer Europe: rare, deeply divergent twigs like I2-L596, I2a-CTS595 (L160, S21825) and L161 — about 1% of lineages, the last witnesses of the pre-farming world." } },
   { top:"G2-P15", from:-6600, to:-6000, story:{
-    sq:"Bujqit e parë neolitikë nga Anatolia (~6500 p.e.s.). Sot vetëm relike të shpërndara, por me larmi shumë të lartë — shenjë moshe të madhe.",
-    en:"The first Neolithic farmers from Anatolia (~6500 BC). Today only scattered relics, but extremely diverse — a signature of great age." } },
+    sq:"Bujqit e parë neolitikë nga Anatolia (~6500 p.e.s.). Sot vetëm relike të shpërndara, por me larmi shumë të lartë — shenjë moshe të madhe. Dy degëza (G2a1-Z45700, G1-FGC3095) mund të kenë ardhur shumë më vonë nga Kaukazi a bota iranike.",
+    en:"The first Neolithic farmers from Anatolia (~6500 BC). Today only scattered relics, but extremely diverse — a signature of great age. Two twigs (G2a1-Z45700, G1-FGC3095) may have arrived much later from the Caucasus or the Iranic world." } },
   { top:"J2a-M410", from:-6500, to:-1000, wide:true, story:{
     sq:"Shumë valë të pavarura mesdhetare-anatolike, nga Neoliti deri në Antikitet. 48 degë terminale në vetëm 120 mostra — larmia më e lartë për mostër ndër kladat e mëdha: shumë familje të vjetra, jo një popull i vetëm.",
     en:"Many independent Mediterranean-Anatolian waves, from the Neolithic through Antiquity. 48 terminal branches in just 120 samples — the highest variety per sample among the big clades: many old families, not one people." } },
@@ -838,23 +840,32 @@ const CHRONO = [
     sq:"Shtresë neolitike nga Lindja e Afërt; sot relike të rralla.",
     en:"A Neolithic Near-Eastern layer; rare relics today." } },
   { top:"E1b-M123", from:-6000, to:-2500, wide:true, story:{
-    sq:"Shtresë nga Levanti/Anatolia; ardhje nga Neoliti deri në Epokën e Bronzit.",
-    en:"A Levantine/Anatolian layer; arrivals from the Neolithic through the Bronze Age." } },
-  { top:"J1-M267", from:-6000, to:1500, wide:true, story:{
-    sq:"Valë të ndryshme nga Lindja e Afërt — nga bujqit neolitikë deri në periudhën osmane; shumë linja të pavarura, larmi e lartë.",
-    en:"Multiple Near-Eastern waves — from Neolithic farmers to the Ottoman era; many independent lineages, high diversity." } },
+    sq:"Shtresë nga Levanti/Anatolia; ardhje nga Neoliti deri në Epokën e Bronzit. Grupimi më i madh sot: Y4972 në Kukës (12 mostra).",
+    en:"A Levantine/Anatolian layer; arrivals from the Neolithic through the Bronze Age. Its biggest cluster today: Y4972 in Kukës (12 samples)." } },
+  { top:"J1-M267", sub:"Z2217", label:"J1-Z1828", from:-6000, to:-2000, story:{
+    sq:"Dega kaukazo-anatolike e J1 — shtresë e vjetër lindore, e përqendruar në jug (Gjirokastër, Vlorë). Ardhje me gjasë nga Neoliti deri në Bronz.",
+    en:"J1's Caucasus-Anatolian branch — an old eastern layer, concentrated in the south (Gjirokastër, Vlorë). Likely arrived between the Neolithic and the Bronze Age." } },
   { top:"E-V13", from:-5400, to:-4400, burst:-1100, story:{
     sq:"Paraardhësit erdhën me bujqit neolitikë; vetë V13 lindi ~2800 p.e.s. dhe shpërtheu në Bronz–Hekur bashkë me popujt historikë të Ballkanit (ilirët, trakët). Dega e çdo të katërti shqiptar.",
     en:"Its ancestors came with Neolithic farmers; V13 itself was born ~2800 BC and exploded in the Bronze–Iron Age alongside the historic Balkan peoples (Illyrians, Thracians). The lineage of one in four Albanians." } },
-  { top:"J2b-M205", from:-3000, to:-1500, wide:true, story:{
-    sq:"Degë e rrallë lindore, në Ballkan me gjasë që nga Epoka e Bronzit.",
-    en:"A rare eastern branch, likely in the Balkans since the Bronze Age." } },
+  { top:"J2b-M205", from:-3000, to:-1500, story:{
+    sq:"Kushëriri i largët lindor i L283-shit: të gjitha mostrat shqiptare ndajnë një trung të vetëm (CTS1969) — një linjë e vetme themeluese, me grupimin Y22075 rreth Shkodrës.",
+    en:"L283's distant eastern cousin: all Albanian samples share a single trunk (CTS1969) — one founding lineage, with the Y22075 cluster around Shkodra." } },
   { top:"R1b-M269", from:-2700, to:-2200, story:{
     sq:"Barinjtë e stepës euroaziatike: dega Z2103 (302 mostra) mbërriti me dyndjet indo-europiane ~2500 p.e.s.; PF7562 (77) është degë e rrallë ballkanike po e Bronzit; pak L51 perëndimore, ndoshta mesjetare.",
     en:"Eurasian steppe herders: the Z2103 branch (302 samples) arrived with the Indo-European migrations ~2500 BC; PF7562 (77) is a rare Balkan branch also of the Bronze Age; a little western L51, possibly medieval." } },
   { top:"J2b-L283", from:-2400, to:-2000, burst:-1500, story:{
     sq:"Ardhje në Bronzin e hershëm përgjatë Adriatikut; e gjetur në varre të Dalmacisë së Bronzit. Trung i vetëm me degëzim të pasur vendas — kandidati klasik “ilir”.",
     en:"Arrived in the Early Bronze Age along the Adriatic; found in Bronze-Age Dalmatian burials. A single trunk with rich local branching — the classic “Illyrian” candidate." } },
+  { top:"I2a-M223", from:-1500, to:-500, burst:700, story:{
+    sq:"Sipas artikullit të projektit: dega mbizotëruese L701 u bashkua me indo-europianët në Europën lindore (gjendet në eshtra të Jamnajës dhe të Bronzit bullgar) dhe mbërriti në Ballkanin perëndimor në Bronz–Hekur, krah degëve E-V13 e R1b. Dega kryesore PH18 u shpërnda pastaj nga Shqipëria e mesme (Tiranë–Elbasan–Shpat) në Mesjetën e hershme.",
+    en:"Per the project's own article: the dominant L701 branch joined the Indo-Europeans in eastern Europe (found in Yamnaya and Bulgarian Bronze-Age remains) and reached the western Balkans in the Bronze–Iron Age, alongside E-V13 and R1b branches. Its main cluster PH18 then spread from central Albania (Tirana–Elbasan–Shpat) in the early Middle Ages." } },
+  { top:"R1b-M269", sub:"L51", label:"R1b-L51", from:-300, to:1400, wide:true, story:{
+    sq:"Dega perëndimore e R1b (31 mostra, kryesisht në jug): kandidatët janë keltët e shek. III p.e.s., kolonistët romakë nga Italia, normanët e venedikasit. Rrymë e vogël, koha e saktë e pasigurt.",
+    en:"R1b's western branch (31 samples, mostly southern): candidates are the 3rd-century-BC Celts, Roman colonists from Italy, Normans and Venetians. A small stream, exact timing uncertain." } },
+  { top:"J1-M267", sub:"P58", label:"J1-P58", from:-200, to:1500, wide:true, story:{
+    sq:"Dega levantine e J1 — rryma të holla nga Antika deri në periudhën osmane, me grupime të mëdha vendëse: FGC12816 në Labëri (20 mostra) dhe V6422 në Gjirokastër.",
+    en:"J1's Levantine branch — thin streams from Antiquity to the Ottoman era, with large local clusters: FGC12816 in Labëria (20 samples) and V6422 in Gjirokastër." } },
   { top:"I1-M253", from:350, to:550, burst:1300, story:{
     sq:"Prejardhje veriore (gjermanike): linjat ballkanike takohen jo më larg se ~1600 vjet — më gjasë gotët e Antikitetit të vonë. Grupimet: Y60985 në Pukë e Kosovë, Y97339 në Labëri; u shumuan me sistemin e fiseve.",
     en:"Northern (Germanic) origin: Balkan lineages coalesce within ~1,600 years — most likely Goths of Late Antiquity. Clusters: Y60985 in Pukë & Kosovo, Y97339 in Labëria; multiplied through the fis system." } },
@@ -895,16 +906,20 @@ function renderChrono(){
   const selTop = state.lineage.length ? state.lineage[0] : null;
 
   CHRONO.forEach((c,i)=>{
-    const n = counts.get(c.top)||0;
+    const path = c.noclick ? null : (c.sub ? [c.top, c.sub] : [c.top]);
+    const n = c.count ? samples.filter(c.count).length
+            : c.sub ? samples.filter(s=>s.top===c.top && s.chain[1]===c.sub).length
+            : (counts.get(c.top)||0);
+    const disp = c.label || c.top;
     const pctN = 100*n/N, pct = pctN < 1 ? pctN.toFixed(1) : Math.round(pctN);
     const cy = topPad + i*rowH + rowH/2;
     const col = hapColor(c.top) || css("--sO");
-    const sel = selTop === c.top;
+    const sel = path !== null && JSON.stringify(state.lineage)===JSON.stringify(path);
     const g = svg.append("g")
-      .attr("class","crow" + (sel?" sel":"") + (selTop && !sel ? " dim":""))
+      .attr("class","crow" + (sel?" sel":"") + (selTop && selTop!==c.top ? " dim":""))
       .attr("tabindex",0).attr("role","button");
     /* label */
-    g.append("text").attr("class","cname").attr("x",96).attr("y",cy+4).attr("text-anchor","end").text(c.top);
+    g.append("text").attr("class","cname").attr("x",96).attr("y",cy+4).attr("text-anchor","end").text(disp);
     /* presence line to today */
     g.append("line").attr("x1",x(c.to)).attr("x2",x(2025)).attr("y1",cy).attr("y2",cy)
       .attr("stroke",col).attr("stroke-width",2.5).attr("opacity",.4);
@@ -941,9 +956,9 @@ function renderChrono(){
     const tipHtml = () => {
       let when = `${L("chrono-arrival")}: ~${fmtYear(c.from)} – ${fmtYear(c.to)}` + (c.open ? ` (${L("chrono-earlier")})` : "");
       if (c.burst) when += ` · ✳ ${L("chrono-expansion")} ~${fmtYear(c.burst)}`;
-      return `<div class="t">${esc(c.top)} — ${n} (${pct}%)</div><div class="s">${esc(when)}</div><div class="s" style="margin-top:4px">${esc(c.story[lang]||c.story.sq)}</div>`;
+      return `<div class="t">${esc(disp)} — ${n} (${pct}%)</div><div class="s">${esc(when)}</div><div class="s" style="margin-top:4px">${esc(c.story[lang]||c.story.sq)}</div>`;
     };
-    const act = () => { hideTip(); state.lineage = sel ? [] : [c.top]; update(); };
+    const act = () => { if (!path) return; hideTip(); state.lineage = sel ? [] : path; update(); };
     g.on("mousemove", ev => showTip(tipHtml(), ev)).on("mouseleave", hideTip).on("click", act);
     g.on("keydown", ev => { if (ev.key==="Enter"||ev.key===" ") { ev.preventDefault(); act(); } });
   });
@@ -961,7 +976,7 @@ const MIG = [
     {clade:"G2-P15", pts:[[33,38.8],[27,39.6],[22,40.4],[20,41.2]], label:"G2"},
     {clade:"E-V13", pts:[[35.8,35.2],[30,37.2],[24.5,39.2],[20.8,40.6]], label:{sq:"E-V13 (paraardhësit)",en:"E-V13 (ancestors)"}},
     {clade:"J2a-M410", pts:[[28.5,36.6],[23.5,37.6],[20.3,39.6]], label:"J2a"},
-    {clade:null, dashed:true, pts:[[38,34.5],[31,35.6],[25,36.4],[21,38.8]], label:"E1b-M123 · T1a · J1"}],
+    {clade:null, dashed:true, pts:[[38,34.5],[31,35.6],[25,36.4],[21,38.8]], label:"E1b-M123 · T1a · J1-Z1828"}],
   marks:[],
   stories:[
     {clade:"G2-P15", text:{sq:"Bujqit e parë që lëruan tokën e Ballkanit. G2 mbizotëronte ndër ta — sot ka mbetur në vetëm ~1% të linjave, por me larminë më të lartë për mostër në databazë: gjurma e qartë e një populli shumë të vjetër që u mbulua nga valët e mëvonshme.",
@@ -970,9 +985,9 @@ const MIG = [
                           en:"E-V13's ancestors (the E-M78 branch) came from the Levant and Anatolia with the farmers. For three millennia they remained one small lineage among many — their great explosion comes much later."}},
     {clade:"J2a-M410", text:{sq:"Vala e parë nga shumë ardhje mesdhetare-anatolike të J2a — do të pasojnë të tjera me kolonitë greke, Romën e Bizantin. Prandaj J2a ka sot larminë më të lartë për mostër ndër kladat e mëdha (48 degë terminale në 120 mostra): shumë familje të vjetra të pavarura, jo një popull i vetëm.",
                           en:"The first of J2a's many Mediterranean-Anatolian waves — more will follow with the Greek colonies, Rome and Byzantium. That is why J2a today has the highest variety per sample among the big clades (48 terminal branches in 120 samples): many independent old families, not one people."}},
-    {clade:"I2a-M223", text:{sq:"Populli që bujqit gjetën këtu: gjuetarët-mbledhësit e haplogrupit I. Sot mbijetojnë vetëm si degë të rralla e të thella (I2a-M223, I2-L596) — rreth 3% e linjave, dëshmitarët e fundit të Europës para bujqësisë.",
-                          en:"The people the farmers found here: haplogroup I hunter-gatherers. They survive only as rare, deeply divergent twigs (I2a-M223, I2-L596) — about 3% of lineages, the last witnesses of pre-farming Europe."}}],
-  arrived:["I2a-M223"] },
+    {clade:"I2-L596", text:{sq:"Populli që bujqit gjetën këtu: gjuetarët-mbledhësit e haplogrupit I. Sot mbijetojnë vetëm si degë të rralla e të thella (I2-L596, I2a-CTS595, L161) — rreth 1% e linjave, dëshmitarët e fundit të Europës para bujqësisë.",
+                          en:"The people the farmers found here: haplogroup I hunter-gatherers. They survive only as rare, deeply divergent twigs (I2-L596, I2a-CTS595, L161) — about 1% of lineages, the last witnesses of pre-farming Europe."}}],
+  arrived:["I2-L596"] },
 
 { short:{sq:"Stepa",en:"Steppe"}, title:{sq:"Dyndja e stepës",en:"The steppe incursion"}, yrs:{sq:"~3500–2500 p.e.s.",en:"~3500–2500 BC"},
   summary:{sq:"Barinjtë e stepës (kultura Jamnaja) kalojnë Danubin me kuaj e qerre. “Europa e Vjetër” bujqësore shndërrohet rrënjësisht — dhe pikërisht në këtë trazirë, në Ballkan lind E-V13.",
@@ -990,7 +1005,7 @@ const MIG = [
                           en:"Every E-V13 man on earth descends from one man who lived ~2800 BC, almost certainly in or near the Balkans. The branch's birth coincides with the fusion of the farming and steppe worlds — the blend from which the later Balkan peoples emerge."}},
     {clade:"R1a-M417", text:{sq:"Vëllai stepik i R1b merr rrugën tjetër: kalon në veri të Karpateve, drejt pyjeve të Europës Lindore. Atje degët M458 e Z280 do të bëhen bërthama e botës sllave — dhe do të kthehen në Ballkan 3000 vjet më vonë.",
                           en:"R1b's steppe brother takes the other road: north of the Carpathians, into the East European forests. There the M458 and Z280 branches will become the core of the Slavic world — and return to the Balkans 3,000 years later."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13"] },
+  arrived:["I2-L596","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13"] },
 
 { short:{sq:"Bronzi",en:"Bronze"}, title:{sq:"Bronzi i hershëm",en:"The Early Bronze Age"}, yrs:{sq:"~2500–1800 p.e.s.",en:"~2500–1800 BC"},
   summary:{sq:"Grupe me prejardhje stepike riorganizojnë Ballkanin perëndimor. Përgjatë Adriatikut zbret J2b-L283 — trungu që do të bëhet një nga shenjat gjenetike të botës ilire.",
@@ -1007,7 +1022,7 @@ const MIG = [
                           en:"It arrives as a single trunk and then branches uninterrupted for 4,000 years — only 2% of Albanian pairs split at the root. Found in Bronze-Age Dalmatian burials, it is the classic “Illyrian” candidate: today 16% of Albanian lineages."}},
     {clade:"J2b-M205", text:{sq:"Kushëriri i largët lindor i L283-shit, një rrymë e vogël më vete — sot vetëm 17 mostra.",
                           en:"L283's distant eastern cousin, a small separate stream — just 17 samples today."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269"] },
+  arrived:["I2-L596","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269"] },
 
 { short:{sq:"Hekuri",en:"Iron"}, title:{sq:"Bronzi i vonë & Hekuri",en:"Late Bronze & Iron Age"}, yrs:{sq:"~1500–800 p.e.s.",en:"~1500–800 BC"},
   summary:{sq:"Pas shembjes së botës mikenase, E-V13 shpërthen në mënyrë spektakolare — një nga zgjerimet më të mëdha demografike të Europës. Nga kjo trazirë kristalizohen popujt historikë: ilirët në perëndim, trakët në lindje, helenët në jug.",
@@ -1018,14 +1033,17 @@ const MIG = [
   arrows:[
     {clade:"E-V13", pts:[[21.5,41.8],[23.5,43.8]], label:{sq:"E-V13 · zgjerimi i madh",en:"E-V13 · the great expansion"}},
     {clade:"E-V13", pts:[[21.5,41.8],[18.8,43.9]], label:""},
-    {clade:"E-V13", pts:[[21.5,41.8],[21.8,39.2]], label:""}],
+    {clade:"E-V13", pts:[[21.5,41.8],[21.8,39.2]], label:""},
+    {clade:"I2a-M223", dashed:true, pts:[[23,47.5],[20.8,44.5],[19.9,42.2]], label:"I2a-M223 (L701)", li:0}],
   marks:[],
   stories:[
     {clade:"E-V13", text:{sq:"46% e çifteve E-V13 shqiptare ndahen që në rrënjë të degës — shenja e një shpërthimi yjor: shumë djem njëherësh, brez pas brezi. Dega bëhet bërthama e popullsive ilire e trake dhe sot është linja e çdo të katërtit shqiptar (28%).",
                           en:"46% of Albanian E-V13 pairs split right at the branch root — the signature of a star burst: many sons at once, generation after generation. The branch becomes core to the Illyrian and Thracian populations; today it is the lineage of one in four Albanians (28%)."}},
     {clade:"J2b-L283", text:{sq:"Tashmë i vendosur, degëzohet paralelisht me E-V13 nëpër fiset ilire — dy trungjet rriten bashkë.",
-                          en:"Now established, it branches in parallel with E-V13 through the Illyrian tribes — the two trunks grow together."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+                          en:"Now established, it branches in parallel with E-V13 through the Illyrian tribes — the two trunks grow together."}},
+    {clade:"I2a-M223", text:{sq:"Bashkudhëtari i harruar i dyndjeve: dega L701, e gjetur në eshtra të Jamnajës e të Bronzit bullgar, zbret në Ballkanin perëndimor krah E-V13 e R1b — sot 2.7% e linjave.",
+                          en:"The migrations' forgotten fellow-traveller: the L701 branch, found in Yamnaya and Bulgarian Bronze-Age remains, descends into the western Balkans alongside E-V13 and R1b — today 2.7% of lineages."}}],
+  arrived:["I2-L596","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
 
 { short:{sq:"Klasike",en:"Classical"}, title:{sq:"Epoka klasike",en:"The Classical age"}, yrs:{sq:"~800–150 p.e.s.",en:"~800–150 BC"},
   summary:{sq:"Fiset ilire dalin në histori me emra: taulantët, ardianët, dardanët. Grekët ngrenë koloni në bregdet — Epidamnos (Durrësi, 627 p.e.s.) dhe Apolonia. Popullsia e brendshme mbetet e njëjta.",
@@ -1042,7 +1060,7 @@ const MIG = [
                           en:"Greek colonists bring a new Mediterranean stream into the coastal towns — J2a, E1b and others. The impact stays mostly urban; the highlands keep their Illyrian make-up."}},
     {clade:"R1b-M269", text:{sq:"Degët Z2103 (si BY611, e ardhshmja linjë e Bytyçit) jetojnë tani thellë brenda botës ilire-dardane — “stepikët” janë bërë prej kohësh vendas.",
                           en:"The Z2103 branches (like BY611, the future Bytyçi line) now live deep inside the Illyrian-Dardanian world — the “steppe people” long since natives."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+  arrived:["I2-L596","I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
 
 { short:{sq:"Roma",en:"Rome"}, title:{sq:"Perandoria Romake",en:"The Roman Empire"}, yrs:{sq:"150 p.e.s.–300 e.s.",en:"150 BC–300 AD"},
   summary:{sq:"Roma nënshtron Ilirinë (168 p.e.s.) dhe ndërton Rrugën Egnatia. Ushtarë, tregtarë e skllevër nga gjithë perandoria lënë gjurmë të vogla gjenetike; masa e popullsisë mbetet e vjetra.",
@@ -1054,13 +1072,13 @@ const MIG = [
     {clade:"R1a-M417", dashed:true, pts:[[39,45.5],[31,43.8],[25,42.6],[20.3,41.8]], label:{sq:"R1a-Z93 · sarmatët?",en:"R1a-Z93 · Sarmatians?"}}],
   marks:[],
   stories:[
-    {clade:null, title:{sq:"Përzierja perandorake",en:"The imperial mix"}, text:{sq:"Garnizonet dhe rrugët sjellin individë nga Anadolli, Levanti e Afrika e Veriut: pjesa më e madhe e J1-ve të vonshëm, disa J2a urbane, ndoshta edhe E1b-M81 veriafrikane. Rryma të holla — sot secila nën 3% të linjave.",
-                          en:"Garrisons and roads bring individuals from Anatolia, the Levant and North Africa: most of the later J1, some urban J2a, perhaps the North-African E1b-M81. Thin streams — each under 3% of lineages today."}},
+    {clade:null, title:{sq:"Përzierja perandorake",en:"The imperial mix"}, text:{sq:"Garnizonet dhe rrugët sjellin individë nga Anadolli, Levanti e Afrika e Veriut: pjesa më e madhe e J1-P58, disa J2a urbane, ndoshta edhe E1b-M81 veriafrikane e R1b-L51 perëndimore. Rryma të holla — sot secila nën 3% të linjave.",
+                          en:"Garrisons and roads bring individuals from Anatolia, the Levant and North Africa: most of J1-P58, some urban J2a, perhaps the North-African E1b-M81 and western R1b-L51. Thin streams — each under 3% of lineages today."}},
     {clade:"R1a-M417", title:{sq:"Rruga lindore",en:"The eastern road"}, text:{sq:"Dy familje nga Lezha mbajnë R1a-Z93 — degën “aziatike” të R1a-së, atë të skithëve e sarmatëve, që u nda nga dega europiane ~5300 vjet më parë. Roma vendosi qindra mijëra sarmatë në Ballkan (viti 334); këto linja mund të jenë jehona e tyre e rrallë — ose një ardhje më e vonë nga lindja.",
                           en:"Two Lezhë families carry R1a-Z93 — R1a's “Asian” branch, that of the Scythians and Sarmatians, split from the European branch ~5,300 years ago. Rome settled hundreds of thousands of Sarmatians in the Balkans (334 AD); these lines may be their rare echo — or a later arrival from the east."}},
     {clade:"E-V13", text:{sq:"Nën paqen romake, linjat ilire (E-V13, J2b, R1b) vazhdojnë pa u prekur në brendësi — vazhdimësia që do t’i japë Mesjetës popullin arbëror.",
                           en:"Under the Roman peace the Illyrian lineages (E-V13, J2b, R1b) continue untouched inland — the continuity that will hand the Middle Ages the Albanian people."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+  arrived:["I2-L596","I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
 
 { short:{sq:"Dyndjet",en:"Migrations"}, title:{sq:"Dyndjet e mëdha",en:"The Great Migrations"}, yrs:{sq:"300–800 e.s.",en:"300–800 AD"},
   summary:{sq:"Perandoria çahet. Gotët kalojnë Ballkanin (I1), pastaj sllavët vendosen masivisht (I2a-Din, R1a). Paraardhësit e shqiptarëve mbahen në malësitë — atje ku vazhdimësia nuk u këput kurrë.",
@@ -1082,7 +1100,7 @@ const MIG = [
                           en:"The return from the north: after 3,000 years, the M458 and Z280 branches — now the heart of the Slavic world — descend into the Balkans (77% of Albanian R1a). The route is confirmed by the L1029 branch, whose closest ancient match is a 12th-century Slav from northeastern Germany; a single founder (Y133361) left 23 present-day descendants around Dibër and Korçë."}},
     {clade:"E-V13", text:{sq:"Linjat e vjetra (E-V13, J2b-L283, R1b) tkurren drejt malësive dhe mbijetojnë. Nga kjo bërthamë vazhdimësie do të dalë populli që burimet mesjetare do ta quajnë arbëror.",
                           en:"The old lineages (E-V13, J2b-L283, R1b) contract into the highlands and survive. From this core of continuity will emerge the people medieval sources call Albanian."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
+  arrived:["I2-L596","I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205"] },
 
 { short:{sq:"Mesjeta",en:"Medieval"}, title:{sq:"Mesjeta & Arbanoni",en:"The Middle Ages & Arbanon"}, yrs:{sq:"800–1400 e.s.",en:"800–1400 AD"},
   summary:{sq:"Bizanti, Rashka e Bullgaria ndajnë Ballkanin. Rreth vitit 1079 burimet bizantine përmendin për herë të parë arbërit; më vonë principata e Arbanonit. Normanët sulmojnë Durrësin (1081). Në malësi lind sistemi i fiseve — dhe disa linja shpërthejnë përmes tij.",
@@ -1100,7 +1118,7 @@ const MIG = [
                           en:"Individual founders leave hundreds of descendants: BY611>A24000 in Bytyçi, Y60985 in Kabash, the Berisha and Krasniqi branches. Whoever was rich in sons is rich in samples today — whatever haplogroup he carried."}},
     {clade:"I1-M253", title:{sq:"Normanët",en:"The Normans"}, text:{sq:"Pasardhësit e vikingëve të Normandisë marrin Durrësin më 1081. Ndonjë linjë e rrallë perëndimore (I1-L22, R1b-L51) mund të ketë hyrë me ta — rryma të vogla, të pasigurta.",
                           en:"Normandy's Viking descendants take Durrës in 1081. The occasional rare western lineage (I1-L22, R1b-L51) may have entered with them — small, uncertain streams."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
+  arrived:["I2-L596","I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
 
 { short:{sq:"Osmane",en:"Ottoman"}, title:{sq:"Periudha osmane",en:"The Ottoman era"}, yrs:{sq:"1400–1912",en:"1400–1912"},
   summary:{sq:"Pas rënies së Shkodrës (1479) shumë arbër ikin në Itali — arbëreshët marrin me vete gjithë mozaikun gjenetik. Nga lindja hyn një rrymë e hollë me administratën. Malësitë ruajnë gjenealogjitë që sot lexohen në ADN.",
@@ -1118,7 +1136,7 @@ const MIG = [
                           en:"The last eastern wave: Ottoman officials, soldiers and traders add new J1 and J2a lines in the towns — the final stream before the modern era."}},
     {clade:"E-V13", title:{sq:"Deri te 2128 mostrat",en:"Down to the 2,128 samples"}, text:{sq:"Çdo mostër e databazës është pika fundore e njërës prej këtyre nëntë skenave. Larmia brenda çdo klade — e madhe a e vogël — është ora që mat se kur nisi rrugëtimi i saj.",
                           en:"Every sample in the database is the endpoint of one of these nine scenes. The diversity within each clade — great or small — is the clock that tells when its journey began."}}],
-  arrived:["I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
+  arrived:["I2-L596","I2a-M223","G2-P15","T1a-M70","J2a-M410","E1b-M123","J1-M267","E-V13","R1b-M269","J2b-L283","J2b-M205","I1-M253","I2a-L460","R1a-M417"] },
 ];
 
 let migIdx = 0;
